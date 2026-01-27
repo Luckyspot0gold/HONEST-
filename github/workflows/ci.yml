@@ -1,15 +1,55 @@
-name: CI
+name: CI/CD for H.O.N.E.S.T.
+
 on: [push, pull_request]
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-    - run: npm ci || true
-    - run: npm test || true
-    - name: Build
-      run: npm run build || true
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: honest-build
+          path: ./build/HONEST-
+          retention-days: 7
+
+  deploy-to-manus:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: honest-build
+      - name: Deploy to Manus Server via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.MANUS_HOST }}
+          username: ${{ secrets.MANUS_USER }}
+          key: ${{ secrets.MANUS_SSH_KEY }}
+          source: "./*"
+          target: "/var/www/honest.manus.space/"
+          strip_components: 0

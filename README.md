@@ -165,9 +165,9 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 - Performance optimization
 
 **Community:**
-- Discord: [discord.gg/honest-standard](https://discord.gg/honest-standard)
 - X/Twitter: [@Goldandrainbows](https://twitter.com/Goldandrainbows)
-
+- Linkedin: https://www.linkedin.com/in/justin-mccrea-439285a9/
+- telegram: t
 ---
 
 ## 🏆 Roadmap
@@ -208,7 +208,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 **Justin McCrea**  
 Founder, Reality Protocol LLC
 
-- Email: justin@realityprotocol.io
+- Email: StoneYardGames@proton.me coming-soon justin@realityprotocol.io
 - X: [@Goldandrainbows](https://twitter.com/Goldandrainbows)
 - Demo: [honestdemo.manus.space](https://honestdemo.manus.space)
 

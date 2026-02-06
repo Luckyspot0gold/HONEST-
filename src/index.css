@@ -1,0 +1,526 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Quantum Elegance Theme - Dark Cosmic with Gold Accents */
+:root {
+  /* Primary: Gold/Amber (432 Hz resonance) */
+  --primary: oklch(0.75 0.15 85);
+  --primary-foreground: oklch(0.1 0.01 85);
+  
+  /* Background: Deep cosmic black with subtle blue tint */
+  --background: oklch(0.08 0.02 250);
+  --foreground: oklch(0.95 0.01 85);
+  
+  /* Card: Slightly lighter than background with transparency */
+  --card: oklch(0.12 0.02 250 / 0.8);
+  --card-foreground: oklch(0.95 0.01 85);
+  
+  /* Popover */
+  --popover: oklch(0.15 0.02 250);
+  --popover-foreground: oklch(0.95 0.01 85);
+  
+  /* Secondary: Muted gold */
+  --secondary: oklch(0.25 0.05 85);
+  --secondary-foreground: oklch(0.95 0.01 85);
+  
+  /* Muted: Dark gray with blue tint */
+  --muted: oklch(0.18 0.02 250);
+  --muted-foreground: oklch(0.65 0.01 250);
+  
+  /* Accent: Bright gold */
+  --accent: oklch(0.80 0.18 85);
+  --accent-foreground: oklch(0.1 0.01 85);
+  
+  /* Destructive: Red */
+  --destructive: oklch(0.60 0.25 25);
+  --destructive-foreground: oklch(0.95 0 0);
+  
+  /* Border & Input */
+  --border: oklch(0.25 0.02 250 / 0.3);
+  --input: oklch(0.25 0.02 250 / 0.5);
+  --ring: oklch(0.75 0.15 85);
+  
+  /* Charts: Gold gradient */
+  --chart-1: oklch(0.70 0.15 85);
+  --chart-2: oklch(0.75 0.15 85);
+  --chart-3: oklch(0.80 0.18 85);
+  --chart-4: oklch(0.85 0.20 85);
+  --chart-5: oklch(0.90 0.22 85);
+  
+  /* Sidebar */
+  --sidebar: oklch(0.10 0.02 250);
+  --sidebar-foreground: oklch(0.95 0.01 85);
+  --sidebar-primary: oklch(0.75 0.15 85);
+  --sidebar-primary-foreground: oklch(0.1 0.01 85);
+  --sidebar-accent: oklch(0.18 0.02 250);
+  --sidebar-accent-foreground: oklch(0.95 0.01 85);
+  --sidebar-border: oklch(0.25 0.02 250 / 0.3);
+  --sidebar-ring: oklch(0.75 0.15 85);
+  
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  
+  /* Typography Hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 1400px;
+    }
+  }
+  
+  /* Custom Glow Effect */
+  .glow-gold {
+    text-shadow: 0 0 20px oklch(0.75 0.15 85 / 0.5),
+                 0 0 40px oklch(0.75 0.15 85 / 0.3);
+  }
+  
+  .glow-gold-strong {
+    text-shadow: 0 0 10px oklch(0.75 0.15 85 / 0.8),
+                 0 0 20px oklch(0.75 0.15 85 / 0.6),
+                 0 0 30px oklch(0.75 0.15 85 / 0.4);
+  }
+  
+  /* Glassmorphism Card */
+  .glass-card {
+    background: oklch(0.12 0.02 250 / 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid oklch(0.25 0.02 250 / 0.3);
+    box-shadow: 0 8px 32px 0 oklch(0 0 0 / 0.37);
+  }
+  
+  /* Cosmic Background Animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+  
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* Focus visible for keyboard navigation */
+  *:focus-visible {
+    outline: 3px solid oklch(0.75 0.15 85);
+    outline-offset: 2px;
+  }
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.05 0 0);
+  --card-foreground: oklch(1 0 0);
+  --primary: oklch(0.95 0.25 85);
+  --border: oklch(0.5 0 0);
+  --muted-foreground: oklch(0.9 0 0);
+}
+
+.high-contrast .glass-card {
+  background: oklch(0.05 0 0);
+  border: 2px solid oklch(0.95 0.25 85);
+}
+
+/* Reduced Motion */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Font Size Adjustments */
+[data-font-size="large"] {
+  font-size: 125%;
+}
+
+[data-font-size="extra-large"] {
+  font-size: 150%;
+}
+
+/* Color Blind Modes */
+[data-color-blind-mode="protanopia"] {
+  --primary: oklch(0.75 0.15 200);
+  --accent: oklch(0.80 0.18 200);
+}
+
+[data-color-blind-mode="deuteranopia"] {
+  --primary: oklch(0.75 0.15 250);
+  --accent: oklch(0.80 0.18 250);
+}
+
+[data-color-blind-mode="tritanopia"] {
+  --primary: oklch(0.75 0.15 350);
+  --accent: oklch(0.80 0.18 350);
+}
+
+/* ============================================
+   MOBILE RESPONSIVE ENHANCEMENTS
+   ============================================ */
+
+/* Touch-friendly targets (minimum 44x44px) */
+@media (pointer: coarse) {
+  button,
+  [role="button"],
+  a[href],
+  input[type="checkbox"],
+  input[type="radio"],
+  select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Mobile typography adjustments */
+@media (max-width: 640px) {
+  body {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  h1 {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+  
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+  }
+  
+  h3 {
+    font-size: clamp(1.25rem, 5vw, 2rem);
+  }
+  
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Tablet breakpoint */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+  body {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* Reduce particle count on mobile */
+@media (max-width: 1024px) {
+  canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Optimize animations for mobile */
+@media (prefers-reduced-motion: no-preference) and (max-width: 768px) {
+  .animate-float {
+    animation-duration: 8s; /* Slower on mobile */
+  }
+  
+  .animate-pulse-glow {
+    animation-duration: 4s;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/* Improve focus indicators */
+:focus-visible {
+  outline: 3px solid oklch(0.75 0.15 85);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* High contrast focus for keyboard users */
+.high-contrast *:focus-visible {
+  outline: 4px solid oklch(1 0 0);
+  outline-offset: 4px;
+  background-color: oklch(0.1 0 0);
+}
+
+/* Skip link styling */
+.sr-only:focus,
+.sr-only:active {
+  position: fixed;
+  width: auto;
+  height: auto;
+  padding: 1rem 1.5rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  z-index: 9999;
+}
+
+/* Ensure sufficient contrast for links */
+a:not(.no-underline) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover:not(.no-underline) {
+  text-decoration-thickness: 2px;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .no-print,
+  button,
+  [role="button"],
+  nav {
+    display: none !important;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+}
+
+/* ============================================
+   DARK MODE TOGGLE TRANSITION
+   ============================================ */
+
+:root {
+  color-scheme: dark;
+}
+
+:root.light {
+  color-scheme: light;
+}
+
+/* Smooth theme transitions */
+:root,
+:root * {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease;
+}
+
+/* Disable transitions during theme switch for reduced motion */
+.reduced-motion :root,
+.reduced-motion :root * {
+  transition: none !important;
+}
+
+/* ============================================
+   PWA SAFE AREAS (iOS notch support)
+   ============================================ */
+
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+  
+  header {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background-color: oklch(0.18 0.02 250);
+  background-image: linear-gradient(
+    90deg,
+    oklch(0.18 0.02 250) 0px,
+    oklch(0.25 0.02 250) 40px,
+    oklch(0.18 0.02 250) 80px
+  );
+  background-size: 200px 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+.prevent-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+}

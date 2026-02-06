@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#d4af37" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>H.O.N.E.S.T. - Harmonic Oracle for Networked Economic Sensory Transactions</title>
+    <meta name="description" content="The world's first 6-dimensional market eigenstate analysis powered by quantum mechanical principles and 432 Hz harmonic resonance. Verified multi-sensory economic truth for everyone." />
+    <meta name="keywords" content="H.O.N.E.S.T., market data, accessibility, blockchain, Avalanche, quantum mechanics, 432 Hz, harmonic analysis, multi-sensory, economic truth" />
+    <link rel="icon" type="image/png" href="https://files.manuscdn.com/user_upload_by_module/session_file/93610584/zzLBvexGzpKSjpys.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="H.O.N.E.S.T. - Harmonic Oracle for Networked Economic Sensory Transactions" />
+    <meta property="og:description" content="The world's first 6-dimensional market eigenstate analysis powered by quantum mechanical principles and 432 Hz harmonic resonance." />
+    <meta property="og:image" content="https://files.manuscdn.com/user_upload_by_module/session_file/93610584/zzLBvexGzpKSjpys.png" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="H.O.N.E.S.T. - Harmonic Oracle for Networked Economic Sensory Transactions" />
+    <meta name="twitter:description" content="The world's first 6-dimensional market eigenstate analysis powered by quantum mechanical principles and 432 Hz harmonic resonance." />
+    <meta name="twitter:image" content="https://files.manuscdn.com/user_upload_by_module/session_file/93610584/zzLBvexGzpKSjpys.png" />
+    <meta name="description" content="Experience the world's first 6-dimensional market eigenstate analysis powered by the H.O.N.E.S.T. system - Harmonic Oversight Network for Ethical Sensory Translation" />
+    <meta name="keywords" content="H.O.N.E.S.T., Truth Matrix, 6D Eigenstate, Market Analysis, Reality Protocol, 432 Hz, Quantum Market Data" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Register service worker for PWA
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('[SW] Registered:', reg.scope))
+            .catch(err => console.log('[SW] Registration failed:', err));
+        });
+      }
+    </script>
+    <script
+      defer
+      src="%VITE_ANALYTICS_ENDPOINT%/umami"
+      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
+  </body>
+
+</html>

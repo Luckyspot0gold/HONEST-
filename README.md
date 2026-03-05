@@ -33,7 +33,7 @@ Open standard for verified multi-sensory economic truth. Built during Avalanche 
 
 ## Live Demo
 
-**https://honest.manus.space** — See BTC decoherence in real-time
+**https://honestdemo.manus.space** — See BTC decoherence in real-time
 
 ---
 

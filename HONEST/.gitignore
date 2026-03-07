@@ -1,3 +1,9 @@
+# .gitignore
+.env
+.env.local
+.env.*.local
+*.key
+private_keys/
 # Dependencies
 **/node_modules
 .pnpm-store/

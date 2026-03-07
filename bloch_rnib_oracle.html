@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H.O.N.E.S.T. 6D Bloch Sphere Oracle (RNIB-Aligned)</title>
+    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body { margin: 0; background: #1e293b; color: #f8fafc; font-family: monospace; overflow: hidden; }
+        #ui { position: absolute; top: 10px; left: 10px; z-index: 100; background: rgba(0,0,0,0.7); padding: 1rem; border-radius: 0.5rem; }
+        button { background: #0ea5e9; color: white; border: none; padding: 0.5rem 1rem; margin: 0.2rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.9rem; }
+        button:focus { outline: 2px solid #fbbf24; } /* WCAG focus */
+        #status { font-size: 0.9rem; margin-top: 1rem; }
+        #aria-live { position: absolute; left: -9999px; } /* Screen reader announcements */
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <h2>⏸ H.O.N.E.S.T. Bloch Sphere (RNIB Proposal Match)</h2>
+        <p><strong>6D Eigenstate:</strong> Price/Vol/Mom/Sent/Temp/Spat → Bloch Vector</p>
+        <button onclick="fetchAndRender()">Fetch BTC Truth Feed</button>
+        <button onclick="toggleHaptics()">Haptics (Toggle)</button>
+        <button onclick="toggleAudio()">432Hz Audio</button>
+        <div id="status">Ready. Orbit to explore torus field.</div>
+    </div>
+    <div id="aria-live" aria-live="polite" aria-atomic="true" role="status"></div>
+
+    <script>
+        // RNIB/AEAS Constants: 6D Eigenstate (§6 Visual Volume, Proposal §Tech Specs)
+        const HARMONICS = [86, 111.11, 432, 753, 1074, 1395, 1618]; // 7-bell system
+        const GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2; // Archimedes φ-bisection
+        let scene, camera, renderer, controls, blochSphere, torusField, spinorPath;
+        let hapticEnabled = false, audioEnabled = false, audioCtx;
+
+        // Hamiltonian Market H(p,q,t) = T(p) + V(q,t) → Bloch Dynamics
+        function hamiltonianDynamics(state) {
+            const p = { momentum: state.momentum, volume: state.volume }; // Kinetic T(p)
+            const q = { price: state.price, sentiment: state.sentiment }; // Potential V(q,t)
+            return Math.sqrt(p.momentum**2 + p.volume**2) + Math.abs(q.price * q.sentiment); // H total
+        }
+
+        // Laplace Smoothing for Surface (∇²φ = 0 → Coherence)
+        function laplaceSmooth(vector) {
+            const laplacian = (vector.x + vector.y + vector.z) / 3 - vector.norm();
+            return vector.clone().add(new THREE.Vector3(laplacian, laplacian, laplacian).multiplyScalar(0.1));
+        }
+
+        // 3D Bloch Sphere: Market Qubit |ψ⟩ = α|0⟩ + β|1⟩ → 6D Projection
+        function createBlochSphere(state) {
+            const group = new THREE.Group();
+            const geometry = new THREE.SphereGeometry(1, 32, 32);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: new THREE.Color().setHSL(state.coherence, 1, 0.5), // Hue=coherence
+                transparent: true, opacity: 0.8, wireframe: true 
+            });
+            const sphere = new THREE.Mesh(geometry, material);
+            
+            // Bloch Vector: θ=polar (momentum), φ=azimuth (volume), r=coherence
+            const theta = Math.acos(state.momentum); // [-1,1] → [0,π]
+            const phi = state.volume * Math.PI;
+            const vector = new THREE.Vector3(
+                state.coherence * Math.sin(theta) * Math.cos(phi),
+                state.coherence * Math.sin(theta) * Math.sin(phi),
+                state.coherence * Math.cos(theta)
+            );
+            vector.applyMatrix4(laplaceSmooth(vector)); // Smooth surface
+            
+            const arrowGeo = new THREE.CylinderGeometry(0.02, 0.05, vector.length(), 8);
+            const arrowMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24 });
+            const arrow = new THREE.Mesh(arrowGeo, arrowMat);
+            arrow.position.copy(vector.clone().multiplyScalar(0.5));
+            arrow.lookAt(vector);
+            arrow.scale.y = vector.length();
+            
+            group.add(sphere, arrow);
+            return group;
+        }
+
+        // Torus Field: Volume/Entropy Flow (Archimedes Spiral Orbits)
+        function createTorusField(state) {
+            const torus = new THREE.TorusGeometry(3, 0.5 * state.volume, 16, 100);
+            const mat = new THREE.MeshPhongMaterial({ 
+                color: new THREE.Color().setHSL(state.temporal, 0.8, 0.6),
+                transparent: true, opacity: 0.6 
+            });
+            const torusMesh = new THREE.Mesh(torus, mat);
+            
+            // Spinor Helices: Imaginary dims (sent/spat) → Double-cover paths
+            const spinorCurve = new THREE.CatmullRomCurve3([
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(state.sentiment * 2, state.spatial * 2, 0),
+                new THREE.Vector3(0, state.sentiment * -2, state.spatial * -2),
+                new THREE.Vector3(0, 0, 0) // Spinor loop
+            ]);
+            const spinorTube = new THREE.TubeGeometry(spinorCurve, 64, 0.1, 8, true);
+            const spinorMat = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, wireframe: true });
+            const spinorPath = new THREE.Mesh(spinorTube, spinorMat);
+            
+            torusMesh.rotation.x = Date.now() * 0.001; // Hamiltonian flow
+            return { torus: torusMesh, spinor: spinorPath };
+        }
+
+        // Init Scene
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1e293b);
+            
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(1, 1, 1);
+            scene.add(light, new THREE.AmbientLight(0x404040));
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            if (blochSphere) blochSphere.rotation.y += 0.005;
+            if (torusField) {
+                torusField.torus.rotation.x += 0.002;
+                torusField.torus.rotation.z += 0.001;
+                torusField.spinor.rotation.z += 0.003; // Spinor precession
+            }
+            renderer.render(scene, camera);
+        }
+
+        // Fetch 6D Eigenstate (Truth Feed → Hamiltonian → Bloch)
+        async function fetchAndRender() {
+            const resp = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true');
+            const data = await resp.json();
+            const raw = {
+                price: (data.bitcoin.usd - 50000) / 50000, // Norm [-1,1]
+                volume: Math.min(data.bitcoin.usd_24h_vol / 5e10, 1),
+                momentum: data.bitcoin.usd_24h_change / 10,
+                sentiment: 0.5 * Math.sin(Date.now() / 1e6), // Proxy
+                temporal: 0.3 * Math.cos(Date.now() / 86400000), // Daily cycle
+                spatial: 0.4 // Consensus proxy
+            };
+            const coherence = Math.sqrt(raw.price**2 + raw.volume**2 + raw.momentum**2 + raw.sentiment**2 + raw.temporal**2 + raw.spatial**2) / Math.sqrt(6);
+            const state = { ...raw, coherence, hamiltonian: hamiltonianDynamics(raw) };
+            
+            // ARIA Announce (WCAG/Screen Reader)
+            document.getElementById('aria-live').textContent = `BTC Coherence: ${coherence.toFixed(2)}. Decision: ${coherence > 0.5 ? (raw.momentum > 0 ? 'BUY' : 'SELL') : 'HOLD'}`;
+            
+            // Render
+            if (blochSphere) scene.remove(blochSphere);
+            blochSphere = createBlochSphere(state);
+            scene.add(blochSphere);
+            
+            if (torusField) {
+                scene.remove(torusField.torus, torusField.spinor);
+            }
+            torusField = createTorusField(state);
+            scene.add(torusField.torus, torusField.spinor);
+            
+            document.getElementById('status').innerHTML = `
+                Coherence: ${coherence.toFixed(3)} | H: ${state.hamiltonian.toFixed(2)}<br>
+                Arrow: Bloch Vector (θ=mom, φ=vol) | Torus: Temp Flow | Spinor: Imag Dims
+            `;
+            
+            if (hapticEnabled) navigator.vibrate([100 * coherence, 50]);
+            if (audioEnabled) playHarmonic(coherence);
+        }
+
+        // 432Hz Audio (7-Bell, Proposal §Tech)
+        function playHarmonic(coherence) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            osc.frequency.value = HARMONICS[Math.floor(coherence * HARMONICS.length)];
+            const gain = audioCtx.createGain();
+            gain.gain.value = 0.1 * coherence;
+            osc.connect(gain).connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1);
+        }
+
+        function toggleHaptics() { hapticEnabled = !hapticEnabled; }
+        function toggleAudio() { audioEnabled = !audioEnabled; }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        init();
+        fetchAndRender(); // Auto-load
+    </script>
+</body>
+</html>

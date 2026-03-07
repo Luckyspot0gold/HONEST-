@@ -1,0 +1,10 @@
+curl https://api.venice.ai/api/v1/chat/completions \
+  --header "Authorization: Bearer VENICE_ADMIN_KEY_tw9k2ivqaqdS2rnBMg6IWn2ttwa0ssjwADTcB48Ymd" \
+  --header "Content-Type: application/json" \
+  --data '
+{
+  "model": "venice-uncensored",
+  "messages": [
+    {"role": "user", "content": "What makes you different from other AIs?"}
+  ]
+}'

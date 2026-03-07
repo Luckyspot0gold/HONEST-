@@ -1,0 +1,10 @@
+<script>
+async function playAEASSound() {
+  const signal = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true').then(r=>r.json());
+  const audioCtx = new AudioContext();
+  const osc = audioCtx.createOscillator(); osc.frequency.value = 432;
+  const gain = audioCtx.createGain(); gain.gain.value = Math.min(signal.bitcoin.usd_24h_vol/1e12, 0.8);
+  // FM/Gain nodes for vol/momentum...
+  osc.connect(gain).connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime+10);
+}
+</script><button onclick="playAEASSound()">AEAS BTC Heartbeat</button>

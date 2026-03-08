@@ -1,4 +1,21 @@
-integrations/google-home-connector.js
+# 1. Build Google Home integration 
+cd integrations
+touch google-home-connector.js
+npm install actions-on-google
+
+# 2. Test with your Nest device
+node google-home-connector.js
+
+# 3. Deploy to Actions Console
+gactions deploy
+
+# 4. Test voice commands
+"Hey Google, talk to H.O.N.E.S.T. Oracle"
+
+# 5. Add to GitHub
+git add integrations/google-home-connector.js
+git commit -m "🏠 Google Home integration - house sings the market!"
+git pushintegrations/google-home-connector.js
 /**
  * Google Home / Nest Integration
  * Makes your house play McCrea Market Metrics

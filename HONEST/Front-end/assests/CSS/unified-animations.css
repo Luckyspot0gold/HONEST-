@@ -1,0 +1,221 @@
+FILE 4: Additional CSS Animations
+frontend/assets/css/unified-animations.css
+/**
+ * Advanced animations for Reality Protocol
+ */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(0, 212, 255, 0.8);
+    }
+}
+
+@keyframes rotate3d {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
+
+/* Data update animations */
+@keyframes dataUpdate {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+        background: rgba(0, 212, 255, 0.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.data-updated {
+    animation: dataUpdate 0.5s ease-out;
+}
+
+/* Coherence meter pulse */
+@keyframes coherencePulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px currentColor);
+    }
+    50% {
+        filter: drop-shadow(0 0 15px currentColor);
+    }
+}
+
+#meter-needle {
+    animation: coherencePulse 2s ease-in-out infinite;
+}
+
+/* Decision shake (for uncertainty) */
+@keyframes decisionShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.decision-uncertain {
+    animation: decisionShake 0.5s ease-in-out;
+}
+
+/* Spectrum layer active state */
+.spectrum-layer.active {
+    animation: glow 1s ease-in-out infinite;
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+/* Loading state */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 212, 255, 0.3);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Particle effects for high coherence */
+@keyframes particleFloat {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(20px);
+        opacity: 0;
+    }
+}
+
+.coherence-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: particleFloat 2s ease-out infinite;
+}
+
+/* Dimension bar fill animation */
+.dim-fill {
+    position: relative;
+    overflow: hidden;
+}
+
+.dim-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    to {
+        left: 100%;
+    }
+}
+
+/* Bell ring visualization */
+@keyframes bellRing {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2) rotate(5deg);
+    }
+    100% {
+        transform: scale(1.5) rotate(0deg);
+        opacity: 0;
+    }
+}
+
+.bell-ring-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    animation: bellRing 1s ease-out;
+}
+
+/* Responsive scaling */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+FILE 5: Mock Data Generator (For Testing)
+frontend/assets/js/mock-data.js
+/**
+ * Mock Data Generator
+ * For testing when backend isn't available
+ */
+
+export class MockDataGenerator {
+    constructor() {
+        this.baseValues = {
+            BTC: { price: 45000, volatility: 0.02 },
+            ETH: { price: 2500, volatility: 0.03 },
+            SOL: { price: 100, volatility: 0.05 },
+            AVAX: { price: 35, volatility: 0.04 }
+        };
+    }
+    
+    generateEigenstate(asset) {
+        const base = this.baseValues[asset] || this.baseValues.BTC;
+        
+        // Generate somewhat realistic 6D eigenstate
+        const momentum = (Math.random() - 0.5) * 2; // -1 to +1
+        const price =

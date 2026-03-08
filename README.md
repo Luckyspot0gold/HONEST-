@@ -1,4 +1,8 @@
-# HONEST - Harmonic Objective Non-biased Equitable Sensory Translation
+
+
+---
+# H.O.N.E.S.T. Truth Matrix – 6D Market Eigenstate Demo #
+## ** Harmonic Objective Non-biased Equitable Sensory Translation ** ##
 
 **Making financial data accessible through sound, touch, and vision.**
 
@@ -8,10 +12,6 @@
 [![GitHub stars](https://img.shields.io/github/stars/Luckyspot0gold/HONEST-.svg?style=social&label=Star)](https://github.com/Luckyspot0gold/HONEST-)
 [![Contributors](https://img.shields.io/github/contributors/Luckyspot0gold/HONEST-.svg)](https://github.com/Luckyspot0gold/HONEST-/graphs/contributors)
 [![Issues](https://img.shields.io/github/issues/Luckyspot0gold/HONEST-.svg)](https://github.com/Luckyspot0gold/HONEST-/issues)
-
----
-# H.O.N.E.S.T. Truth Matrix – 6D Market Eigenstate Demo
-
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Demo](https://img.shields.io/badge/Live%20Demo-honest.manus.space-green)](https://honest.manus.space)
 [![Avalanche x402](https://img.shields.io/badge/Avalanche-x402%20Payments-red)](https://x402.avax.network)
@@ -31,9 +31,11 @@ Open standard for verified multi-sensory economic truth. Built during Avalanche 
 
 ---
 
-## Live Demo
 
-**https://honestdemo.manus.space** — See BTC decoherence in real-time
+## Live Demos 
+- **Primary**: https://2y4c2atom332w.ok.kimi.link (M3 + PTE + Cognitive + Sensory)
+- **Fallback**: https://honestdemo.manus.space
+##** See BTC decoherence in real-time **##
 
 ---
 

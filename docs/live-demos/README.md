@@ -1,0 +1,6 @@
+# Live HONEST Demos (All Working)
+- **Core Demo**: https://honestdemo.manus.space (6D Bloch + sonification)
+- **Rangi Heartbeat**: https://rangisheartbeat.manus.space (M3 metrics)
+- **Quantum Beats**: https://quantum-rangisbeats.base44.app (cymatics)
+- **CMM Tester**: /demo/cmm-test.html (industry color selector)
+- **Cognitive Load**: /demo/load-test.html (overload simulation)

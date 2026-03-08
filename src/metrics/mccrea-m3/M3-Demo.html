@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>M3 Live Test</title></head>
+<body>
+  <div id="metrics"></div>
+  <script src="McCreaMarketMetrics.js"></script>
+  <script>
+    const data = { price: 67000, volume: 2.4e9, volatility: 0.3, sentiment: 0.7 };
+    const m3 = new McCreaMarketMetrics(data);
+    document.getElementById('metrics').innerHTML = JSON.stringify(m3.calculateM3(data), null, 2);
+  </script>
+</body>
+</html>

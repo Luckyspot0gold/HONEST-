@@ -1,4 +1,5 @@
-{
+Data Source --> Ingestion Layer --> Verification Engine --> Sonification/Haptic Engine --> API Layer --> Clients (Web/Hardware)
+              (Kafka/RabbitMQ)    (5-Layer Truth)         (Core IP)                (GraphQL/WebSockets){
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],

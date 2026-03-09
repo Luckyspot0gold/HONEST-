@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+</head>
+<body>
+    <div class="mermaid">
+graph TD
+    A[Bolt.new Camera Feed] --> B[Hand Tracking]
+    A --> C[Eye Tracking]
+    A --> D[Head Tracking]
+    
+    B --> E[Gesture Recognition Engine]
+    C --> F[Gaze Detection]
+    D --> G[Head Pose Analysis]
+    
+    E --> H[Unified Control Interface]
+    F --> H
+    G --> H
+    
+    H --> I[Sensory System Controls]
+    I --> J[Audio Adjustments]
+    I --> K[Haptic Adjustments]
+    I --> L[Visual Adjustments]
+    I --> M[Market Navigation]
+    I --> N[System Commands]
+    
+    J --> O[Real-Time Feedback]
+    K --> O
+    L --> O
+    M --> O
+    N --> O
+    
+    O --> P[Accessibility Profiles]
+    P --> Q[Neuromotor Adaptations]
+    P --> R[Sensory Sensitivity Adjustments]
+    P --> S[Input Method Customization]
+    </div>
+</body>
+</html>

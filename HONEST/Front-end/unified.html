@@ -1,0 +1,1529 @@
+FILE 1: frontend/unified.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reality Protocol - Unified Economic Truth Engine</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/assets/css/unified.css">
+    
+    <!-- Three.js for 3D/VR -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/": "https://cdn.jsdelivr.net/npm/three@0.160.0/"
+        }
+    }
+    </script>
+    
+    <meta name="description" content="Experience markets as 6-dimensional quantum fields. Feel, see, and hear economic truth through ancient mathematics and modern VR.">
+    <meta property="og:title" content="Reality Protocol - Unified Economic Truth Engine">
+    <meta property="og:description" content="The world's first system combining quantum mechanics, ancient Greek mathematics, and VR accessibility for universal economic understanding.">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-background">
+            <canvas id="hero-canvas"></canvas>
+        </div>
+        
+        <div class="hero-content">
+            <div class="logo-container">
+                <div class="logo-sphere"></div>
+                <h1 class="logo-text">
+                    <span class="reality">Reality</span>
+                    <span class="protocol">Protocol</span>
+                </h1>
+            </div>
+            
+            <p class="tagline">
+                Experience markets as they truly are:<br>
+                <span class="highlight">6-dimensional quantum fields</span>
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">6D</span>
+                    <span class="stat-label">Eigenstate Analysis</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">432Hz</span>
+                    <span class="stat-label">Harmonic Base</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">2,287</span>
+                    <span class="stat-label">Years of Math</span>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <button class="cta-primary" onclick="scrollToExperience()">
+                    🌐 Enter the Sphere
+                </button>
+                <button class="cta-secondary" onclick="scrollToLearn()">
+                    📚 Learn How
+                </button>
+            </div>
+            
+            <div class="scroll-indicator">
+                <span>Scroll to explore</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 5v14M5 12l7 7 7-7"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+    
+    <!-- The Trinity: Three Pillars -->
+    <section id="trinity">
+        <div class="container">
+            <h2 class="section-title">The Trinity of Truth</h2>
+            <p class="section-subtitle">
+                Three ancient principles, unified for the first time
+            </p>
+            
+            <div class="trinity-grid">
+                <!-- Archimedes Method -->
+                <div class="trinity-card archimedes">
+                    <div class="card-icon">🏛️</div>
+                    <h3>Archimedes Method</h3>
+                    <p class="card-year">287-212 BC</p>
+                    <p class="card-description">
+                        The Method of Exhaustion detects momentum depletion by slicing market data into infinitesimal segments. When positive and negative areas balance, reversal is imminent.
+                    </p>
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Detects</span>
+                            <span class="metric-value">Exhaustion</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Precision</span>
+                            <span class="metric-value">±2%</span>
+                        </div>
+                    </div>
+                    <button class="card-cta" onclick="focusModule('archimedes')">
+                        Explore →
+                    </button>
+                </div>
+                
+                <!-- Truth Matrix -->
+                <div class="trinity-card truth-matrix">
+                    <div class="card-icon">⚛️</div>
+                    <h3>Truth Matrix</h3>
+                    <p class="card-year">6-Dimensional Eigenstate</p>
+                    <p class="card-description">
+                        Quantum mechanical analysis across 3 real dimensions (price, volume, momentum) and 3 imaginary dimensions (sentiment, time, space). Coherence measures dimensional alignment.
+                    </p>
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Coherence</span>
+                            <span class="metric-value" id="live-coherence">--</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Decision</span>
+                            <span class="metric-value" id="live-decision">--</span>
+                        </div>
+                    </div>
+                    <button class="card-cta" onclick="focusModule('truth-matrix')">
+                        Analyze →
+                    </button>
+                </div>
+                
+                <!-- VR Bloch Sphere -->
+                <div class="trinity-card vr-sphere">
+                    <div class="card-icon">🌐</div>
+                    <h3>VR Bloch Sphere</h3>
+                    <p class="card-year">7-Layer Frequency System</p>
+                    <p class="card-description">
+                        Walk inside the market. Assets positioned in 3D space by quantum state. 7 sacred frequencies (396-852 Hz) map to risk levels. Feel markets through sound, touch, and sight.
+                    </p>
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Base Freq</span>
+                            <span class="metric-value">432 Hz</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Modalities</span>
+                            <span class="metric-value">Audio/Haptic/Visual</span>
+                        </div>
+                    </div>
+                    <button class="card-cta" onclick="focusModule('vr-sphere')">
+                        Enter VR →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- The Unified Experience -->
+    <section id="experience">
+        <div class="container-fluid">
+            <h2 class="section-title">The Unified Experience</h2>
+            <p class="section-subtitle">
+                All three systems working in harmony
+            </p>
+            
+            <!-- Asset Selector -->
+            <div class="experience-controls">
+                <div class="asset-selector-unified">
+                    <label>Select Asset:</label>
+                    <div class="asset-buttons">
+                        <button class="asset-btn active" data-asset="BTC">
+                            <span class="asset-symbol">₿</span>
+                            <span class="asset-name">Bitcoin</span>
+                        </button>
+                        <button class="asset-btn" data-asset="ETH">
+                            <span class="asset-symbol">Ξ</span>
+                            <span class="asset-name">Ethereum</span>
+                        </button>
+                        <button class="asset-btn" data-asset="SOL">
+                            <span class="asset-symbol">◎</span>
+                            <span class="asset-name">Solana</span>
+                        </button>
+                        <button class="asset-btn" data-asset="AVAX">
+                            <span class="asset-symbol">▲</span>
+                            <span class="asset-name">Avalanche</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="experience-mode">
+                    <button class="mode-btn active" data-mode="unified">
+                        🌟 Unified
+                    </button>
+                    <button class="mode-btn" data-mode="archimedes">
+                        🏛️ Archimedes
+                    </button>
+                    <button class="mode-btn" data-mode="truth-matrix">
+                        ⚛️ Truth Matrix
+                    </button>
+                    <button class="mode-btn" data-mode="vr-sphere">
+                        🌐 VR Sphere
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Main Visualization Area -->
+            <div class="experience-grid">
+                <!-- Left: VR/3D Sphere -->
+                <div class="experience-panel sphere-panel">
+                    <div class="panel-header">
+                        <h3>🌐 Quantum State Visualization</h3>
+                        <div class="panel-controls">
+                            <button class="icon-btn" onclick="toggleVR()" title="Enter VR">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="2" y="7" width="20" height="10" rx="2"/>
+                                    <path d="M2 12h20"/>
+                                </svg>
+                            </button>
+                            <button class="icon-btn" onclick="resetCamera()" title="Reset View">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                                    <path d="M21 3v5h-5"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="sphere-container" class="visualization-container"></div>
+                    
+                    <!-- 7-Layer Spectrum Legend -->
+                    <div class="spectrum-legend">
+                        <div class="spectrum-bar">
+                            <div class="spectrum-layer violet" data-freq="396">
+                                <span class="layer-name">Violet</span>
+                                <span class="layer-freq">396 Hz</span>
+                            </div>
+                            <div class="spectrum-layer indigo" data-freq="417">
+                                <span class="layer-name">Indigo</span>
+                                <span class="layer-freq">417 Hz</span>
+                            </div>
+                            <div class="spectrum-layer blue" data-freq="432">
+                                <span class="layer-name">Blue</span>
+                                <span class="layer-freq">432 Hz</span>
+                            </div>
+                            <div class="spectrum-layer green" data-freq="528">
+                                <span class="layer-name">Green</span>
+                                <span class="layer-freq">528 Hz</span>
+                            </div>
+                            <div class="spectrum-layer yellow" data-freq="639">
+                                <span class="layer-name">Yellow</span>
+                                <span class="layer-freq">639 Hz</span>
+                            </div>
+                            <div class="spectrum-layer orange" data-freq="741">
+                                <span class="layer-name">Orange</span>
+                                <span class="layer-freq">741 Hz</span>
+                            </div>
+                            <div class="spectrum-layer red" data-freq="852">
+                                <span class="layer-name">Red</span>
+                                <span class="layer-freq">852 Hz</span>
+                            </div>
+                        </div>
+                        <div class="spectrum-labels">
+                            <span>Safe</span>
+                            <span>Neutral</span>
+                            <span>Risky</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right: Data & Analytics -->
+                <div class="experience-panel data-panel">
+                    <!-- Truth Matrix Coherence -->
+                    <div class="data-card coherence-card">
+                        <h4>⚛️ Quantum Coherence</h4>
+                        <div class="coherence-display">
+                            <div class="coherence-meter">
+                                <svg viewBox="0 0 200 120">
+                                    <!-- Meter arc -->
+                                    <path id="meter-bg" d="M 20 100 A 80 80 0 0 1 180 100" 
+                                          fill="none" stroke="#334155" stroke-width="20"/>
+                                    <path id="meter-fill" d="M 20 100 A 80 80 0 0 1 180 100" 
+                                          fill="none" stroke="#00d4ff" stroke-width="20" 
+                                          stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+                                    <!-- Needle -->
+                                    <line id="meter-needle" x1="100" y1="100" x2="100" y2="40" 
+                                          stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                                    <circle cx="100" cy="100" r="8" fill="#fff"/>
+                                </svg>
+                            </div>
+                            <div class="coherence-value">
+                                <span id="coherence-number">--</span>
+                                <span class="coherence-label">Coherence</span>
+                            </div>
+                        </div>
+                        <div class="coherence-interpretation" id="coherence-text">
+                            Analyzing market state...
+                        </div>
+                    </div>
+                    
+                    <!-- Archimedes Exhaustion -->
+                    <div class="data-card exhaustion-card">
+                        <h4>🏛️ Momentum Exhaustion</h4>
+                        <div class="exhaustion-bars">
+                            <div class="bar-group">
+                                <label>Positive Area</label>
+                                <div class="bar-container">
+                                    <div class="bar positive" id="positive-bar" style="width: 0%"></div>
+                                    <span class="bar-value" id="positive-value">--</span>
+                                </div>
+                            </div>
+                            <div class="bar-group">
+                                <label>Negative Area</label>
+                                <div class="bar-container">
+                                    <div class="bar negative" id="negative-bar" style="width: 0%"></div>
+                                    <span class="bar-value" id="negative-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="exhaustion-status">
+                            <span class="status-label">Exhaustion Level:</span>
+                            <span class="status-value" id="exhaustion-percent">--</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 6D Dimensions Breakdown -->
+                    <div class="data-card dimensions-card">
+                        <h4>📊 6D Dimensional Analysis</h4>
+                        <div class="dimensions-grid">
+                            <div class="dimension-item real">
+                                <span class="dim-icon">📈</span>
+                                <span class="dim-label">Price</span>
+                                <div class="dim-bar">
+                                    <div class="dim-fill" id="dim-price" style="width: 50%"></div>
+                                </div>
+                                <span class="dim-value" id="val-price">--</span>
+                            </div>
+                            <div class="dimension-item real">
+                                <span class="dim-icon">📊</span>
+                                <span class="dim-label">Volume</span>
+                                <div class="dim-bar">
+                                    <div class="dim-fill" id="dim-volume" style="width: 50%"></div>
+                                </div>
+                                <span class="dim-value" id="val-volume">--</span>
+                            </div>
+                            <div class="dimension-item real">
+                                <span class="dim-icon">⚡</span>
+                                <span class="dim-label">Momentum</span>
+                                <div class="dim-bar">
+                                    <div class="dim-fill" id="dim-momentum" style="width: 50%"></div>
+                                </div>
+                                <span class="dim-value" id="val-momentum">--</span>
+                            </div>
+                            <div class="dimension-item imaginary">
+                                <span class="dim-icon">💭</span>
+                                <span class="dim-label">Sentiment</span>
+                                <div class="dim-bar">
+                                    <div class="dim-fill" id="dim-sentiment" style="width: 50%"></div>
+                                </div>
+                                <span class="dim-value" id="val-sentiment">--</span>
+                            </div>
+                            <div class="dimension-item imaginary">
+                                <span class="dim-icon">⏱️</span>
+                                <span class="dim-label">Temporal</span>
+                                <div class="dim-bar">
+                                    <div class="dim-fill" id="dim-temporal" style="width: 50%"></div>
+                                </div>
+                                <span class="dim-value" id="val-temporal">--</span>
+                            </div>
+                            <div class="dimension-item imaginary">
+                                <span class="dim-icon">🌍</span>
+                                <span class="dim-label">Spatial</span>
+                                <div class="dim-bar">
+                                    <div class="dim-fill" id="dim-spatial" style="width: 50%"></div>
+                                </div>
+                                <span class="dim-value" id="val-spatial">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decision & Action -->
+                    <div class="data-card decision-card">
+                        <div class="decision-display">
+                            <div class="decision-icon" id="decision-icon">🎯</div>
+                            <div class="decision-text">
+                                <span class="decision-label">Quantum Decision</span>
+                                <span class="decision-value" id="decision-value">ANALYZING...</span>
+                            </div>
+                        </div>
+                        <div class="decision-confidence">
+                            <span>Confidence:</span>
+                            <span id="decision-confidence">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Audio Controls -->
+            <div class="audio-controls">
+                <button class="audio-btn" id="play-bells" onclick="playBellSequence()">
+                    🔔 Play 7-Bell Sequence
+                </button>
+                <button class="audio-btn" id="toggle-spatial" onclick="toggleSpatialAudio()">
+                    🎧 Toggle Spatial Audio
+                </button>
+                <div class="volume-control">
+                    <label>Volume:</label>
+                    <input type="range" id="master-volume" min="0" max="100" value="30">
+                    <span id="volume-display">30%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- How It Works -->
+    <section id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How Reality Protocol Works</h2>
+            
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>Market Data Ingestion</h3>
+                    <p>Real-time price, volume, and order book data from multiple sources (Binance, CoinGecko, on-chain analysis)</p>
+                </div>
+                
+                <div class="process-arrow">→</div>
+                
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>Truth Matrix Analysis</h3>
+                    <p>6D eigenstate calculation across real (price, volume, momentum) and imaginary (sentiment, time, space) dimensions</p>
+                </div>
+                
+                <div class="process-arrow">→</div>
+                
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>Archimedes Exhaustion</h3>
+                    <p>Method of Exhaustion detects momentum depletion through area integration and positive/negative balance</p>
+                </div>
+                
+                <div class="process-arrow">→</div>
+                
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>Multi-Sensory Translation</h3>
+                    <p>Coherence mapped to 7-bell frequencies (396-852 Hz), haptic patterns, and VR positioning</p>
+                </div>
+                
+                <div class="process-arrow">→</div>
+                
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3>Universal Access</h3>
+                    <p>Experience through sight (VR/3D), sound (spatial audio), or touch (haptics) - accessible to everyone</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- The Team & Philosophy -->
+    <section id="philosophy">
+        <div class="container">
+            <h2 class="section-title">Built Together, For Everyone</h2>
+            
+            <div class="philosophy-content">
+                <div class="quote-block">
+                    <blockquote>
+                        "I just cracked open the nut and spent a year trying to explain it. You, I, and AI friends built this together. Not just me."
+                    </blockquote>
+                    <cite>— Justin William McCrea, Founder</cite>
+                </div>
+                
+                <div class="principles-grid">
+                    <div class="principle">
+                        <h3>🌍 Universal Access</h3>
+                        <p>Economics should be accessible through sight, sound, and touch. No one left behind.</p>
+                    </div>
+                    <div class="principle">
+                        <h3>🔓 Open Source</h3>
+                        <p>Core algorithms are open. Transparency builds trust. Community builds truth.</p>
+                    </div>
+                    <div class="principle">
+                        <h3>🎵 Sacred Geometry</h3>
+                        <p>432 Hz base frequency. 7-bell chakra system. Mathematics meets mysticism.</p>
+                    </div>
+                    <div class="principle">
+                        <h3>⚛️ Quantum Truth</h3>
+                        <p>Markets exist in superposition until measured. Coherence reveals reality.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section id="cta">
+        <div class="container">
+            <h2>Ready to Experience Economic Truth?</h2>
+            <p>Join the Reality Protocol community</p>
+            
+            <div class="cta-grid">
+                <a href="/vr" class="cta-card">
+                    <span class="cta-icon">🌐</span>
+                    <h3>Enter VR</h3>
+                    <p>Step inside the quantum field</p>
+                </a>
+                <a href="/truth-matrix" class="cta-card">
+                    <span class="cta-icon">⚛️</span>
+                    <h3>Analyze Now</h3>
+                    <p>Get 6D eigenstate for any asset</p>
+                </a>
+                <a href="https://github.com/Reality-Protocol/HONEST" class="cta-card">
+                    <span class="cta-icon">💻</span>
+                    <h3>View Source</h3>
+                    <p>Explore the open codebase</p>
+                </a>
+                <a href="/docs" class="cta-card">
+                    <span class="cta-icon">📚</span>
+                    <h3>Read Docs</h3>
+                    <p>Deep dive into the mathematics</p>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Reality Protocol</h3>
+                    <p>Making economics accessible to everyone through multi-sensory quantum analysis</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Product</h4>
+                        <a href="/vr">VR Bloch Sphere</a>
+                        <a href="/truth-matrix">Truth Matrix</a>
+                        <a href="/archimedes">Archimedes Method</a>
+                        <a href="/api">API Access</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Resources</h4>
+                        <a href="/docs">Documentation</a>
+                        <a href="/whitepaper.pdf">Whitepaper</a>
+                        <a href="https://github.com/Reality-Protocol">GitHub</a>
+                        <a href="/patents">Patent Portfolio</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Company</h4>
+                        <a href="/about">About Us</a>
+                        <a href="/team">Team</a>
+                        <a href="/blog">Blog</a>
+                        <a href="/contact">Contact</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2026 Reality Protocol LLC. Sheridan, WY & Denver, CO</p>
+                <p class="footer-tagline">"The map is held. The treasure is truth. 432 Hz harmony. We build forever. Together. Forever."</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script type="module" src="/assets/js/unified-controller.js"></script>
+</body>
+</html>
+FILE 2: frontend/assets/css/unified.css
+/**
+ * Reality Protocol - Unified Landing Page
+ * Designer, posh, accessible
+ */
+
+:root {
+    /* Brand Colors */
+    --primary: #00d4ff;
+    --secondary: #9333ea;
+    --accent: #fbbf24;
+    
+    /* Dark Theme */
+    --bg-primary: #0a0e27;
+    --bg-secondary: #16213e;
+    --bg-tertiary: #1a2332;
+    
+    /* Text */
+    --text-primary: #e4e4e7;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    
+    /* Spectrum */
+    --violet: #9333ea;
+    --indigo: #4f46e5;
+    --blue: #3b82f6;
+    --green: #10b981;
+    --yellow: #fbbf24;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 4rem;
+    --spacing-xl: 6rem;
+    
+    /* Typography */
+    --font-primary: 'Inter', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ==================== HERO SECTION ==================== */
+
+#hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#hero-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 900px;
+    padding: var(--spacing-md);
+}
+
+.logo-container {
+    margin-bottom: var(--spacing-lg);
+    animation: fadeInUp 1s ease-out;
+}
+
+.logo-sphere {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--spacing-md);
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--primary), transparent);
+    border: 2px solid var(--primary);
+    box-shadow: 
+        0 0 40px rgba(0, 212, 255, 0.6),
+        inset 0 0 40px rgba(0, 212, 255, 0.3);
+    animation: spherePulse 3s ease-in-out infinite;
+}
+
+@keyframes spherePulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0, 212, 255, 0.6); }
+    50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(0, 212, 255, 0.8); }
+}
+
+.logo-text {
+    font-size: 4rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.reality {
+    display: block;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.protocol {
+    display: block;
+    color:
+
+    var(--text-primary);
+font-weight: 300;
+}
+.tagline {
+font-size: 1.5rem;
+margin-bottom: var(--spacing-lg);
+color: var(--text-secondary);
+animation: fadeInUp 1s ease-out 0.2s both;
+}
+.highlight {
+color: var(--primary);
+font-weight: 600;
+}
+.hero-stats {
+display: flex;
+justify-content: center;
+gap: var(--spacing-lg);
+margin-bottom: var(--spacing-lg);
+animation: fadeInUp 1s ease-out 0.4s both;
+}
+.stat {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.stat-value {
+font-size: 2.5rem;
+font-weight: 700;
+font-family: var(--font-mono);
+color: var(--primary);
+}
+.stat-label {
+font-size: 0.875rem;
+color: var(--text-secondary);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+.cta-buttons {
+display: flex;
+gap: var(--spacing-sm);
+justify-content: center;
+margin-bottom: var(--spacing-xl);
+animation: fadeInUp 1s ease-out 0.6s both;
+}
+.cta-primary,
+.cta-secondary {
+padding: 1rem 2.5rem;
+font-size: 1.125rem;
+font-weight: 600;
+border-radius: 50px;
+border: none;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+.cta-primary {
+background: linear-gradient(135deg, var(--primary), var(--secondary));
+color: white;
+box-shadow: 0 8px 24px rgba(0, 212, 255, 0.4);
+}
+.cta-primary:hover {
+transform: translateY(-2px);
+box-shadow: 0 12px 32px rgba(0, 212, 255, 0.6);
+}
+.cta-secondary {
+background: transparent;
+color: var(--primary);
+border: 2px solid var(--primary);
+}
+.cta-secondary:hover {
+background: var(--primary);
+color: var(--bg-primary);
+}
+.scroll-indicator {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: var(--spacing-xs);
+color: var(--text-muted);
+font-size: 0.875rem;
+animation: bounce 2s infinite;
+}
+@keyframes bounce {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-10px); }
+}
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(30px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+/* ==================== TRINITY SECTION ==================== */
+#trinity {
+padding: var(--spacing-xl) 0;
+background: var(--bg-secondary);
+}
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 var(--spacing-md);
+}
+.container-fluid {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 var(--spacing-md);
+}
+.section-title {
+font-size: 3rem;
+font-weight: 700;
+text-align: center;
+margin-bottom: var(--spacing-sm);
+}
+.section-subtitle {
+text-align: center;
+font-size: 1.25rem;
+color: var(--text-secondary);
+margin-bottom: var(--spacing-lg);
+}
+.trinity-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+gap: var(--spacing-md);
+}
+.trinity-card {
+background: var(--bg-primary);
+border: 1px solid transparent;
+border-radius: 16px;
+padding: var(--spacing-md);
+transition: all 0.3s ease;
+}
+.trinity-card:hover {
+transform: translateY(-4px);
+box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+.trinity-card.archimedes {
+border-color: var(--yellow);
+}
+.trinity-card.archimedes:hover {
+box-shadow: 0 12px 32px rgba(251, 191, 36, 0.3);
+}
+.trinity-card.truth-matrix {
+border-color: var(--secondary);
+}
+.trinity-card.truth-matrix:hover {
+box-shadow: 0 12px 32px rgba(147, 51, 234, 0.3);
+}
+.trinity-card.vr-sphere {
+border-color: var(--primary);
+}
+.trinity-card.vr-sphere:hover {
+box-shadow: 0 12px 32px rgba(0, 212, 255, 0.3);
+}
+.card-icon {
+font-size: 3rem;
+margin-bottom: var(--spacing-sm);
+}
+.trinity-card h3 {
+font-size: 1.5rem;
+margin-bottom: var(--spacing-xs);
+}
+.card-year {
+font-family: var(--font-mono);
+font-size: 0.875rem;
+color: var(--text-muted);
+margin-bottom: var(--spacing-sm);
+}
+.card-description {
+color: var(--text-secondary);
+margin-bottom: var(--spacing-md);
+line-height: 1.7;
+}
+.card-metrics {
+display: flex;
+gap: var(--spacing-md);
+margin-bottom: var(--spacing-md);
+padding: var(--spacing-sm);
+background: var(--bg-tertiary);
+border-radius: 8px;
+}
+.metric {
+display: flex;
+flex-direction: column;
+}
+.metric-label {
+font-size: 0.75rem;
+color: var(--text-muted);
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+.metric-value {
+font-size: 1.125rem;
+font-weight: 700;
+font-family: var(--font-mono);
+color: var(--primary);
+}
+.card-cta {
+width: 100%;
+padding: 0.75rem;
+background: transparent;
+color: var(--primary);
+border: 1px solid var(--primary);
+border-radius: 8px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.2s;
+}
+.card-cta:hover {
+background: var(--primary);
+color: var(--bg-primary);
+}
+/* ==================== EXPERIENCE SECTION ==================== */
+#experience {
+padding: var(--spacing-xl) 0;
+background: var(--bg-primary);
+}
+.experience-controls {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: var(--spacing-md);
+flex-wrap: wrap;
+gap: var(--spacing-md);
+}
+.asset-selector-unified label {
+display: block;
+margin-bottom: var(--spacing-xs);
+color: var(--text-secondary);
+font-size: 0.875rem;
+}
+.asset-buttons {
+display: flex;
+gap: var(--spacing-sm);
+}
+.asset-btn {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.25rem;
+padding: 0.75rem 1.5rem;
+background: var(--bg-secondary);
+border: 2px solid transparent;
+border-radius: 12px;
+cursor: pointer;
+transition: all 0.2s;
+}
+.asset-btn.active {
+border-color: var(--primary);
+background: rgba(0, 212, 255, 0.1);
+}
+.asset-btn:hover {
+border-color: var(--primary);
+}
+.asset-symbol {
+font-size: 1.5rem;
+}
+.asset-name {
+font-size: 0.875rem;
+color: var(--text-secondary);
+}
+.experience-mode {
+display: flex;
+gap: var(--spacing-xs);
+}
+.mode-btn {
+padding: 0.75rem 1.25rem;
+background: var(--bg-secondary);
+color: var(--text-secondary);
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.2s;
+font-weight: 600;
+}
+.mode-btn.active {
+background: var(--primary);
+color: var(--bg-primary);
+}
+.mode-btn:hover {
+background: var(--bg-tertiary);
+}
+.experience-grid {
+display: grid;
+grid-template-columns: 1.5fr 1fr;
+gap: var(--spacing-md);
+margin-bottom: var(--spacing-md);
+}
+.experience-panel {
+background: var(--bg-secondary);
+border-radius: 16px;
+padding: var(--spacing-md);
+border: 1px solid rgba(0, 212, 255, 0.2);
+}
+.panel-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: var(--spacing-sm);
+}
+.panel-header h3 {
+font-size: 1.25rem;
+}
+.panel-controls {
+display: flex;
+gap: var(--spacing-xs);
+}
+.icon-btn {
+width: 36px;
+height: 36px;
+background: var(--bg-primary);
+border: 1px solid rgba(0, 212, 255, 0.3);
+border-radius: 8px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.2s;
+}
+.icon-btn:hover {
+background: var(--primary);
+border-color: var(--primary);
+}
+.icon-btn svg {
+stroke: var(--text-primary);
+}
+.visualization-container {
+width: 100%;
+height: 500px;
+background: var(--bg-primary);
+border-radius: 12px;
+margin-bottom: var(--spacing-sm);
+}
+/* 7-Layer Spectrum Legend */
+.spectrum-legend {
+margin-top: var(--spacing-sm);
+}
+.spectrum-bar {
+display: flex;
+height: 60px;
+border-radius: 8px;
+overflow: hidden;
+margin-bottom: var(--spacing-xs);
+}
+.spectrum-layer {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+font-size: 0.75rem;
+cursor: pointer;
+transition: all 0.2s;
+position: relative;
+}
+.spectrum-layer:hover {
+flex: 1.2;
+}
+.spectrum-layer.violet { background: var(--violet); }
+.spectrum-layer.indigo { background: var(--indigo); }
+.spectrum-layer.blue { background: var(--blue); }
+.spectrum-layer.green { background: var(--green); }
+.spectrum-layer.yellow { background: var(--yellow); color: var(--bg-primary); }
+.spectrum-layer.orange { background: var(--orange); color: var(--bg-primary); }
+.spectrum-layer.red { background: var(--red); }
+.layer-name {
+font-weight: 700;
+text-transform: uppercase;
+}
+.layer-freq {
+font-family: var(--font-mono);
+font-size: 0.625rem;
+opacity: 0.8;
+}
+.spectrum-labels {
+display: flex;
+justify-content: space-between;
+font-size: 0.875rem;
+color: var(--text-muted);
+}
+/* Data Cards */
+.data-panel {
+display: flex;
+flex-direction: column;
+gap: var(--spacing-sm);
+}
+.data-card {
+background: var(--bg-primary);
+border-radius: 12px;
+padding: var(--spacing-sm);
+}
+.data-card h4 {
+margin-bottom: var(--spacing-sm);
+font-size: 1rem;
+color: var(--text-secondary);
+}
+/* Coherence Card */
+.coherence-display {
+display: flex;
+align-items: center;
+gap: var(--spacing-md);
+}
+.coherence-meter {
+flex-shrink: 0;
+width: 200px;
+height: 120px;
+}
+.coherence-value {
+display: flex;
+flex-direction: column;
+}
+#coherence-number {
+font-size: 2.5rem;
+font-weight: 700;
+font-family: var(--font-mono);
+color: var(--primary);
+}
+.coherence-label {
+font-size: 0.875rem;
+color: var(--text-muted);
+}
+.coherence-interpretation {
+margin-top: var(--spacing-sm);
+padding: var(--spacing-sm);
+background: var(--bg-secondary);
+border-radius: 8px;
+font-size: 0.875rem;
+color: var(--text-secondary);
+}
+/* Exhaustion Card */
+.exhaustion-bars {
+display: flex;
+flex-direction: column;
+gap: var(--spacing-sm);
+}
+.bar-group label {
+display: block;
+margin-bottom: 0.25rem;
+font-size: 0.875rem;
+color: var(--text-secondary);
+}
+.bar-container {
+position: relative;
+width: 100%;
+height: 24px;
+background: var(--bg-tertiary);
+border-radius: 4px;
+overflow: hidden;
+}
+.bar {
+height: 100%;
+transition: width 0.5s ease;
+}
+.bar.positive {
+background: linear-gradient(90deg, var(--green), var(--blue));
+}
+.bar.negative {
+background: linear-gradient(90deg, var(--red), var(--orange));
+}
+.bar-value {
+position: absolute;
+right: 8px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 0.75rem;
+font-family: var(--font-mono);
+font-weight: 700;
+}
+.exhaustion-status {
+margin-top: var(--spacing-sm);
+display: flex;
+justify-content: space-between;
+padding: var(--spacing-xs);
+background: var(--bg-secondary);
+border-radius: 4px;
+}
+/* Dimensions Card */
+.dimensions-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: var(--spacing-sm);
+}
+.dimension-item {
+display: flex;
+flex-direction: column;
+gap: 0.25rem;
+}
+.dimension-item.real {
+border-left: 3px solid var(--primary);
+padding-left: var(--spacing-xs);
+}
+.dimension-item.imaginary {
+border-left: 3px solid var(--secondary);
+padding-left: var(--spacing-xs);
+}
+.dim-icon {
+font-size: 1.25rem;
+}
+.dim-label {
+font-size: 0.75rem;
+color: var(--text-secondary);
+text-transform: uppercase;
+}
+.dim-bar {
+height: 8px;
+background: var(--bg-tertiary);
+border-radius: 4px;
+overflow: hidden;
+}
+.dim-fill {
+height: 100%;
+background: linear-gradient(90deg, var(--primary), var(--secondary));
+transition: width 0.5s ease;
+}
+.dim-value {
+font-size: 0.875rem;
+font-family: var(--font-mono);
+color: var(--text-primary);
+}
+/* Decision Card */
+.decision-display {
+display: flex;
+align-items: center;
+gap: var(--spacing-sm);
+margin-bottom: var(--spacing-sm);
+}
+.decision-icon {
+font-size: 2.5rem;
+}
+.decision-text {
+display: flex;
+flex-direction: column;
+}
+.decision-label {
+font-size: 0.75rem;
+color: var(--text-muted);
+text-transform: uppercase;
+}
+.decision-value {
+font-size: 1.5rem;
+font-weight: 700;
+font-family: var(--font-mono);
+}
+.decision-confidence {
+display: flex;
+justify-content: space-between;
+padding: var(--spacing-xs);
+background: var(--bg-secondary);
+border-radius: 4px;
+font-size: 0.875rem;
+}
+/* Audio Controls */
+.audio-controls {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: var(--spacing-md);
+padding: var(--spacing-md);
+background: var(--bg-secondary);
+border-radius: 12px;
+}
+.audio-btn {
+padding: 0.75rem 1.5rem;
+background: var(--primary);
+color: var(--bg-primary);
+border: none;
+border-radius: 8px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.2s;
+}
+.audio-btn:hover {
+background: var(--secondary);
+}
+.volume-control {
+display: flex;
+align-items: center;
+gap: var(--spacing-sm);
+}
+.volume-control input[type="range"] {
+width: 150px;
+}
+/* ==================== HOW IT WORKS ==================== */
+#how-it-works {
+padding: var(--spacing-xl) 0;
+background: var(--bg-tertiary);
+}
+.process-flow {
+display: flex;
+align-items: center;
+justify-content: center;
+flex-wrap: wrap;
+gap: var(--spacing-md);
+}
+.process-step {
+flex: 1;
+min-width: 200px;
+max-width: 250px;
+padding: var(--spacing-md);
+background: var(--bg-primary);
+border-radius: 12px;
+border: 2px solid var(--primary);
+text-align: center;
+}
+.step-number {
+width: 50px;
+height: 50px;
+margin: 0 auto var(--spacing-sm);
+background: var(--primary);
+color: var(--bg-primary);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.5rem;
+font-weight: 700;
+}
+.process-step h3 {
+font-size: 1.125rem;
+margin-bottom: var(--spacing-xs);
+}
+.process-step p {
+font-size: 0.875rem;
+color: var(--text-secondary);
+}
+.process-arrow {
+font-size: 2rem;
+color: var(--primary);
+}
+/* ==================== PHILOSOPHY ==================== */
+#philosophy {
+padding: var(--spacing-xl) 0;
+background: var(--bg-secondary);
+}
+.philosophy-content {
+max-width: 900px;
+margin: 0 auto;
+}
+.quote-block {
+text-align: center;
+margin-bottom: var(--spacing-lg);
+}
+blockquote {
+font-size: 1.5rem;
+font-style: italic;
+color: var(--text-secondary);
+margin-bottom: var(--spacing-sm);
+}
+cite {
+font-style: normal;
+color: var(--text-muted);
+}
+.principles-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: var(--spacing-md);
+}
+.principle {
+padding: var(--spacing-md);
+background: var(--bg-primary);
+border-radius: 12px;
+border-left: 4px solid var(--primary);
+}
+.principle h3 {
+margin-bottom: var(--spacing-xs);
+}
+.principle p {
+color: var(--text-secondary);
+font-size: 0.875rem;
+}
+/* ==================== CTA SECTION ==================== */
+#cta {
+padding: var(--spacing-xl) 0;
+background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+text-align: center;
+}
+#cta h2 {
+font-size: 2.5rem;
+margin-bottom: var(--spacing-sm);
+}
+#cta p {
+font-size: 1.25rem;
+color: var(--text-secondary);
+margin-bottom: var(--spacing-lg);
+}
+.cta-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: var(--spacing-md);
+}
+.cta-card {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: var(--spacing-md);
+background: var(--bg-primary);
+border: 2px solid transparent;
+border-radius: 12px;
+text-decoration: none;
+color: inherit;
+transition: all 0.3s;
+}
+.cta-card:hover {
+border-color: var(--primary);
+transform: translateY(-4px);
+}
+.cta-icon {
+font-size: 3rem;
+margin-bottom: var(--spacing-sm);
+}
+.cta-card h3 {
+margin-bottom: var(--spacing-xs);
+}
+.cta-card p {
+color: var(--text-secondary);
+font-size: 0.875rem;
+}
+/* ==================== FOOTER ==================== */
+footer {
+padding: var(--spacing-lg) 0 var(--spacing-md);
+background: var(--bg-primary);
+border-top: 1px solid rgba(0, 212, 255, 0.2);
+}
+.footer-content {
+display: flex;
+justify-content: space-between;
+margin-bottom: var(--spacing-lg);
+flex-wrap: wrap;
+gap: var(--spacing-lg);
+}
+.footer-brand {
+max-width: 400px;
+}
+.footer-brand h3 {
+color: var(--primary);
+margin-bottom: var(--spacing-sm);
+}
+.footer-brand p {
+color: var(--text-secondary);
+font-size: 0.875rem;
+}
+.footer-links {
+display: flex;
+gap: var(--spacing-lg);
+}
+.link-group h4 {
+margin-bottom: var(--spacing-sm);
+font-size: 1rem;
+}
+.link-group a {
+display: block;
+color: var(--text-secondary);
+text-decoration: none;
+font-size: 0.875rem;
+margin-bottom: 0.5rem;
+transition: color 0.2s;
+}
+.link-group a:hover {
+color: var(--primary);
+}
+.footer-bottom {
+text-align: center;
+padding-top: var(--spacing-md);
+border-top: 1px solid rgba(255, 255, 255, 0.1);
+color: var(--text-muted);
+font-size: 0.875rem;
+}
+.footer-tagline {
+margin-top: var(--spacing-xs);
+font-style: italic;
+color: var(--primary);
+}
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1024px) {
+.experience-grid {
+grid-template-columns: 1fr;
+}
+.process-arrow {
+    transform: rotate(90deg);
+}
+}
+@media (max-width: 768px) {
+.logo-text {
+font-size: 2.5rem;
+}
+.hero-stats {
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.trinity-grid {
+    grid-template-columns: 1fr;
+}
+
+.asset-buttons {
+    flex-wrap: wrap;
+}
+
+.experience-mode {
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.mode-btn {
+    flex: 1;
+    min-width: 120px;
+}
+
+.dimensions-grid {
+    grid-template-columns: 1fr;
+}
+
+.footer-content {
+    flex-direction: column;
+}
+
+.footer-links {
+    flex-direction: column;
+}
+}

@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@mediapipe/hands": "^0.4.0",        // Hand gesture recognition
+    "airtable": "^0.11.0",               // Research data storage
+    "screen-reader-reader": "^2.0.0",     // Screen reader compatibility
+    "wcag-contrast": "^3.0.0",           // Color compliance checking
+    "i18next": "^1^.0.0",                // Multi-language support
+    "tone": "^2^.0.0",                   // Audio synthesis
+    "vibration": "^1.0.0"                // Haptic feedback
+  }
+}

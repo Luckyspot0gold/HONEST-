@@ -103,3 +103,5 @@
     ]
   }
 }
+npm init -y  # This will create a fresh package.json if yours is corrupted
+npm install

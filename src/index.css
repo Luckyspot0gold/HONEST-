@@ -1,3 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* WCAG 2.1 AA compliant base styles */
+:root {
+  --font-size-base: 16px;
+  --line-height-base: 1.5;
+  --color-text: #000000;
+  --color-background: #ffffff;
+  --color-primary: #0056b3;
+  --color-focus: #0056b3;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-text: #000000;
+    --color-background: #ffffff;
+    --color-primary: #0000ff;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+*:focus {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Ensure sufficient color contrast */
+.text {
+  color: var(--color-text);
+}
+
+.bg {
+  background-color: var(--color-background);
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: white;
+  padding: 8px;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -524,3 +601,21 @@ a:hover:not(.no-underline) {
   transform: translateZ(0);
   will-change: transform;
 }
+# Fix package.json first
+npm init -y
+
+# Install all dependencies
+npm install
+
+# Generate TypeScript configuration
+npx tsc --init
+
+# Set up Vite (if using React)
+npm create vite@latest . -- --template react-ts
+
+# Install Tailwind CSS
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+# Run development server
+npm run dev

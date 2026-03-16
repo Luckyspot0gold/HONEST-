@@ -1,3 +1,26 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './index.css'
+
+// Initialize screen reader announcements
+if ('speechSynthesis' in window) {
+  speechSynthesis.cancel() // Clear any existing announcements
+}
+
+// Ensure proper focus management for accessibility
+document.addEventListener('DOMContentLoaded', () => {
+  const main = document.querySelector('main')
+  if (main && !main.hasAttribute('tabindex')) {
+    main.setAttribute('tabindex', '-1')
+  }
+})
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
 import { trpc } from "@/lib/trpc";
 import { UNAUTHED_ERR_MSG } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

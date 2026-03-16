@@ -1,4 +1,13 @@
-Data Source --> Ingestion Layer --> Verification Engine --> Sonification/Haptic Engine --> API Layer --> Clients (Web/Hardware)
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["vite.config.ts"]
+}Data Source --> Ingestion Layer --> Verification Engine --> Sonification/Haptic Engine --> API Layer --> Clients (Web/Hardware)
               (Kafka/RabbitMQ)    (5-Layer Truth)         (Core IP)                (GraphQL/WebSockets){
   "compilerOptions": {
     "target": "ES2022",

@@ -1,4 +1,15 @@
 {
+  "dependencies": {
+    "three": "^0.162.0",                    // 3D torus visualization
+    "@tensorflow/tfjs": "^4.10.0",         // ML for resonance calculation
+    "tone": "^1^.7.77",                     // Advanced audio synthesis
+    "chroma-js": "^2.4.2",                  // Color theory for toroidal mapping
+    "lodash": "^4.17.21",                   // Utility for field calculations
+    "ml-matrix": "^6.10.5",                 // Matrix math for toroidal transforms
+    "d3-scale-chromatic": "^3.0.0",         // Color scales for resonance mapping
+    "webmidi": "^3.0.0-beta.12"            // MIDI output for musical expression
+  }
+}{
   "name": "honest-rnib-portal",
   "version": "1.0.0",
   "description": "RNIB-compliant multi-sensory accessibility portal for the H.O.N.E.S.T. system",

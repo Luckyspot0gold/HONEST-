@@ -1,3 +1,39 @@
+// Add to your existing WhaleVortexDetector
+class EnhancedWhaleVortexDetector extends WhaleVortexDetector {
+  private toroidalField: ToroidalPerceptionField;
+  private inteliterateProtocol: InteliterateProtocol;
+  
+  constructor() {
+    super();
+    this.toroidalField = new ToroidalPerceptionField();
+    this.inteliterateProtocol = new InteliterateProtocol();
+  }
+  
+  updateEigenstate(data: EigenstateData): void {
+    super.updateEigenstate(data);
+    
+    // Add toroidal description
+    const toroidalExpression = this.toroidalField.mapExperienceToExpression(
+      this.createSensoryExperience(data),
+      this.createLinguisticExpression(data)
+    );
+    
+    // Generate inteliterate communication
+    const inteliterateMessage = this.inteliterateProtocol.translateM3ToInteliterate(
+      this.convertToM3(data)
+    );
+    
+    // Update quantum ball with toroidal visualization
+    this.quantumBall.renderToroidalField(this.convertToM3(data));
+    
+    // Screen reader announcement
+    ScreenReaderAdapter.speak(
+      `Toroidal field resonance at ${toroidalExpression.resonance.frequency} Hertz. ` +
+      `Inteliterate expression: ${inteliterateMessage.subject} ${inteliterateMessage.verb} ` +
+      `${inteliterateMessage.object} with ${inteliterateMessage.modifier}.`
+    );
+  }
+}
 // WhaleVortexDetector_ZK_Haptics.tsx - Add to your HONEST- repo
 import { useEffect, useRef, useState } from 'react';
 // ... (keep all your imports from original)

@@ -1,42 +1,52 @@
 // src/perception/FeniticResonanceEngine.ts
 export class FeniticResonanceEngine {
-  private resonanceLayers: ResonanceLayer[] = [
+  private layers: ResonanceLayer[] = [
     {
       name: 'physical',
       elements: ['sound', 'vibration', 'haptic', 'color'],
-      fundamental: 'ohm',
-      manifestation: 'sensation'
+      fundamental: 'ohm_136.1Hz',
+      manifestation: 'sensation',
+      cymaticPattern: 'mandelbrot'
     },
     {
       name: 'metaphysical',
       elements: ['meaning', 'concept', 'relationship', 'epistemology'],
       fundamental: 'silence',
-      manifestation: 'understanding'
+      manifestation: 'understanding',
+      cymaticPattern: 'fibonacci'
     },
     {
       name: 'foundational',
       elements: ['existence', 'being', 'presence', 'resonance'],
       fundamental: 'stillness',
-      manifestation: 'awareness'
+      manifestation: 'awareness',
+      cymaticPattern: 'lissajous'
     },
     {
       name: 'creative',
       elements: ['expression', 'language', 'communication', 'creativity'],
       fundamental: 'movement',
-      manifestation: 'manifestation'
+      manifestation: 'manifestation',
+      cymaticPattern: 'chaos'
     }
   ];
-
-  async invokeResonance(m3Value: number, layer: ResonanceLayer): Promise<ResonanceResponse> {
-    // Calculate resonance between M3 metric and toroidal field
-    const resonance = this.calculateToroidalResonance(m3Value, layer);
+  
+  generateResonance(toroidalPath: ToroidalPath): FeniticResonance {
+    const resonances: Resonance[] = [];
+    
+    toroidalPath.resonancePoints.forEach(point => {
+      this.layers.forEach(layer => {
+        const resonance = this.calculateLayerResonance(point, layer);
+        resonances.push(resonance);
+      });
+    });
     
     return {
-      sound: this.generateResonantSound(resonance),
-      color: this.generateResonantColor(resonance),
-      haptic: this.generateResonantHaptic(resonance),
-      linguistic: this.generateResonantLinguistic(resonance),
-      metaphysical: this.generateMetaphysicalExpression(resonance)
+      physical: resonances.filter(r => r.layer === 'physical'),
+      metaphysical: resonances.filter(r => r.layer === 'metaphysical'),
+      foundational: resonances.filter(r => r.layer === 'foundational'),
+      creative: resonances.filter(r => r.layer === 'creative'),
+      combined: this.combineResonances(resonances)
     };
   }
 }

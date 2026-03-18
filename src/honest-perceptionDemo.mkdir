@@ -1,0 +1,18 @@
+# Create project
+mkdir honest-perception-demo
+cd honest-perception-demo
+
+# Initialize
+npm init -y
+
+# Install dependencies
+npm install three @tensorflow/tfjs tone chroma-js lodash ml-matrix
+npm install @mediapipe/hands airtable i18next react react-dom
+npm install typescript @types/react @types/react-dom vite
+
+# Create TypeScript config
+npx tsc --init --target es2020 --module esnext --moduleResolution node
+
+# Create directory structure
+mkdir -p src/{perception,accessibility,studies,demo,components}
+mkdir public

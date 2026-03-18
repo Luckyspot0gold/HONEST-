@@ -1,0 +1,26 @@
+{
+  "name": "honest-perception-language",
+  "version": "3.0.0",
+  "description": "Toroidal perception language for multi-sensory financial understanding",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:perception": "jest src/perception/",
+    "test:accessibility": "jest src/accessibility/",
+    "test:studies": "jest src/studies/",
+    "test:integration": "jest src/integration/",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,scss}\"",
+    "analyze": "tsc --noEmit",
+    "generate:types": "ts-node scripts/generate-types.ts",
+    "demo": "ts-node src/main.ts",
+    "demo:rnib": "ts-node src/demos/rnib-demo.ts",
+    "demo:perception": "ts-node src/demos/perception-demo.ts",
+    "demo:gestures": "ts-node src/demos/gesture-demo.ts"
+  },
+  "dependencies": {
+    "three": "^0.162.0",
+    "@tensorflow/tf

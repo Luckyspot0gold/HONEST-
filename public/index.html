@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H.O.N.E.S.T. Perception Creation Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        #container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        #visualization {
+            flex: 3;
+            background: #111;
+            position: relative;
+        }
+        
+        #controls {
+            flex: 1;
+            background: #222;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        #gesture-video {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            height: 240px;
+            border: 2px solid #4A90E2;
+            border-radius: 8px;
+        }
+        
+        .metric-display {
+            margin: 20px 0;
+            padding: 15px;
+            background: #333;
+            border-radius: 8px;
+            border-left: 4px solid #4A90E2;
+        }
+        
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4A90E2;
+        }
+        
+        .metric-label {
+            color: #888;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .toroidal-coordinates {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .perception-sentence {
+            font-style: italic;
+            color: #7ED321;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(126, 211, 33, 0.1);
+            border-radius: 4px;
+        }
+        
+        .study-metric {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4A90E2, #7ED321);
+            transition: width 0.5s ease;
+        }
+        
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #357ABD;
+        }
+        
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .accessibility-toggle {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #666;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #4A90E2;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="visualization">
+            <canvas id="toroidal-canvas"></canvas>
+            <video id="gesture-video" autoplay muted></video>
+        </div>
+        <div id="controls">
+            <h1>H.O.N.E.S.T. Perception Creation</h1>
+            <p>RNIB Demo - Thursday 3:00 PM London / 9:00 AM Denver</p>
+            
+            <div class="metric-display">
+                <div class="metric-label">Harmonic Resonance Index</div>
+                <div class="metric-value" id="hri-value">75.4</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="hri-progress" style="width: 75.4%"></div>
+                </div>
+            </div>
+            
+            <div class="toroidal-coordinates">
+                θ: <span id="theta-value">0.00</span> rad<br>
+                φ: <span id="phi-value">0.00</span> rad<br>
+                Layer: <span id="layer-value">Physical</span>
+            </div>
+            
+            <div class="perception-sentence" id="perception-sentence">
+                Harmonic resonance expresses through foundational vibration.
+            </div>
+            
+            <div class="study-metric">
+                <span>Piano Accuracy</span>
+                <span id="piano-accuracy">85%</span>
+            </div>
+            
+            <div class="study-metric">
+                <span>Chart Accuracy</span>
+                <span id="chart-accuracy">82%</span>
+            </div>
+            
+            <div class="study-metric">
+                <span>Non-Inferiority Margin</span>
+                <span id="margin-value">10%</span>
+            </div>
+            
+            <div class="accessibility-toggle">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="screen-reader-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+                <span>Screen Reader</span>
+            </div>
+            
+            <div class="accessibility-toggle">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="haptic-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+                <span>Haptic Feedback</span>
+            </div>
+            
+            <div class="accessibility-toggle">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="high-contrast-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span>High Contrast</span>
+            </div>
+            
+            <button id="start-demo">Start Demo</button>
+            <button id="next-step">Next Step</button>
+            <button id="reset-demo">Reset</button>
+            
+            <div id="gesture-instructions">
+                <h3>Gesture Controls:</h3>
+                <p>Swipe Right → Next Element</p>
+                <p>Swipe Left → Previous Element</p>
+                <p>Pinch → Select</p>
+                <p>Open Palm → Help Menu</p>
+                <p>Thumbs Up → Confirm</p>
+                <p>Thumbs Down → Cancel</p>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="/src/demo/RNIBPerceptionDemo.ts"></script>
+</body>
+</html>

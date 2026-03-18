@@ -1,63 +1,106 @@
 // src/accessibility/ToroidalGestureNavigation.ts
 export class ToroidalGestureNavigation {
-  private gestureMap: Map<Gesture, ToroidalMovement>;
+  private gestureEngine: GestureEngine;
+  private toroidalField: TorusField;
   private currentPosition: ToroidalCoordinate;
-  private screenReader: ScreenReaderAdapter;
-  private hapticEngine: HapticEngine;
+  private screenReader: EnhancedScreenReader;
+  private hapticFeedback: HapticEngine;
   
   constructor() {
-    this.gestureMap = this.createGestureMap();
-    this.currentPosition = { theta: 0, phi: 0, radius: 1 };
-    this.screenReader = new ScreenReaderAdapter();
-    this.hapticEngine = new HapticEngine();
-  }
-  
-  private createGestureMap(): Map<Gesture, ToroidalMovement> {
-    return new Map([
-      ['swipe_right', { dTheta: Math.PI/8, dPhi: 0, dRadius: 0 }],
-      ['swipe_left', { dTheta: -Math.PI/8, dPhi: 0, dRadius: 0 }],
-      ['swipe_up', { dTheta: 0, dPhi: Math.PI/8, dRadius: 0 }],
-      ['swipe_down', { dTheta: 0, dPhi: -Math.PI/8, dRadius: 0 }],
-      ['pinch_in', { dTheta: 0, dPhi: 0, dRadius: -0.1 }],
-      ['pinch_out', { dTheta: 0, dPhi: 0, dRadius: 0.1 }],
-      ['rotate_cw', { dTheta: Math.PI/4, dPhi: 0, dRadius: 0 }],
-      ['rotate_ccw', { dTheta: -Math.PI/4, dPhi: 0, dRadius: 0 }],
-      ['double_tap', { dTheta: 0, dPhi: 0, dRadius: 0, action: 'select' }],
-      ['open_palm', { dTheta: 0, dPhi: 0, dRadius: 0, action: 'menu' }]
-    ]);
-  }
-  
-  handleGesture(gesture: Gesture): NavigationResult {
-    const movement = this.gestureMap.get(gesture);
-    if (!movement) return { success: false };
+    this.gestureEngine = new GestureEngine();
+    this.toroidalField = new TorusField();
+    this.currentPosition = this.toroidalField.calculatePositionOnTorus(0, 0);
+    this.screenReader = new EnhancedScreenReader();
+    this.hapticFeedback = new HapticEngine();
     
-    // Update position on torus
-    this.currentPosition.theta = 
-      (this.currentPosition.theta + movement.dTheta) % (2 * Math.PI);
-    this.currentPosition.phi = 
-      (this.currentPosition.phi + movement.dPhi) % (2 * Math.PI);
-    this.currentPosition.radius = 
-      Math.max(0.1, Math.min(2, this.currentPosition.radius + movement.dRadius));
+    console.log('🤲 Toroidal Gesture Navigation Initialized:');
+    console.log(`   Initial Position: θ=${this.currentPosition.theta}, φ=${this.currentPosition.phi}`);
+    console.log(`   Gesture Mapping: ${this.gestureEngine.getGestureCount()} gestures`);
+  }
+  
+  async handleGesture(gesture: Gesture, intensity: number = 1.0): Promise<NavigationResult> {
+    console.log(`🎯 Gesture Detected: ${gesture.type} (intensity: ${intensity})`);
+    
+    // Calculate movement in toroidal space
+    const movement = this.calculateToroidalMovement(gesture, intensity);
+    
+    // Update position
+    this.currentPosition = this.toroidalField.calculatePositionOnTorus(
+      this.currentPosition.theta + movement.dTheta,
+      this.currentPosition.phi + movement.dPhi
+    );
     
     // Get content at new position
-    const content = this.getContentAtPosition(this.currentPosition);
+    const content = await this.getContentAtPosition(this.currentPosition);
     
     // Provide multi-sensory feedback
-    this.screenReader.speak(this.describePosition(content));
-    this.hapticEngine.playPattern(this.getHapticPattern(content));
+    await this.provideFeedback(content, gesture);
     
     return {
       success: true,
       newPosition: this.currentPosition,
       content,
-      layer: this.getLayerAtRadius(this.currentPosition.radius)
+      layer: this.getLayerAtPosition(this.currentPosition),
+      description: this.describePosition(this.currentPosition)
     };
   }
   
-  private getLayerAtRadius(radius: number): ToroidalLayer {
-    if (radius < 0.5) return 'foundational';
-    if (radius < 1.0) return 'physical';
-    if (radius < 1.5) return 'metaphysical';
-    return 'creative';
+  private calculateToroidalMovement(
+    gesture: Gesture, 
+    intensity: number
+  ): ToroidalMovement {
+    const baseMovement = this.gestureEngine.getBaseMovement(gesture);
+    
+    return {
+      dTheta: baseMovement.dTheta * intensity,
+      dPhi: baseMovement.dPhi * intensity,
+      dRadius: baseMovement.dRadius * intensity,
+      rotation: baseMovement.rotation * intensity,
+      action: gesture.action
+    };
+  }
+  
+  private async provideFeedback(
+    content: ToroidalContent,
+    gesture: Gesture
+  ): Promise<void> {
+    // Audio feedback
+    const audio = this.generateAudioFeedback(content, gesture);
+    await audio.play();
+    
+    // Haptic feedback
+    const haptic = this.generateHapticFeedback(content, gesture);
+    await haptic.activate();
+    
+    // Screen reader announcement
+    const announcement = this.generateAnnouncement(content, gesture);
+    this.screenReader.announce(announcement);
+    
+    // Visual feedback (for low-vision users)
+    const visual = this.generateVisualFeedback(content);
+    visual.display();
+    
+    console.log(`🔊 Multi-sensory feedback provided for ${content.type}`);
+  }
+  
+  private generateAnnouncement(
+    content: ToroidalContent,
+    gesture: Gesture
+  ): string {
+    const layer = this.getLayerAtPosition(this.currentPosition);
+    const distance = this.calculateToroidalDistance(
+      this.currentPosition,
+      content.position
+    );
+    
+    return `
+      Navigating toroidal space.
+      Layer: ${layer}.
+      Content: ${content.description}.
+      Gesture: ${gesture.type}.
+      Distance: ${distance.toFixed(2)} units.
+      Resonance: ${content.resonance.frequency.toFixed(1)}Hz.
+      Meaning: ${content.meaning}.
+    `.trim().replace(/\s+/g, ' ');
   }
 }

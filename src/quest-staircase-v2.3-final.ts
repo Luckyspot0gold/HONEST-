@@ -3,19 +3,19 @@
  * H.O.N.E.S.T. — Reality Protocol LLC
  * Justin William McCrea
  *
- * QUEST Bayesian Adaptive Psychometric Staircase
- * Version 2.3 — All VVV Venice AI improvements incorporated:
+ * QUEST Bayesian Adaptive Psychometric Staircase — v2.3 FINAL
  *
- *   FIX 1 (Priority 1): Catch trials — clinical validity, RNIB requirement
- *   FIX 2 (Priority 2): Population prior system — 60-70% calibration speedup
- *   FIX 3 (Priority 3): Adaptive transition time f(h) — perceptual smoothness
- *   FIX 4 (Priority 5): Temporal phase-lock verification — cross-correlation
- *   FIX 5 (Priority 4): 8D fallback claim note — documented in code
+ * VVV Venice AI Review Cycle — all issues addressed:
+ *   ✓ maxTrials in constructor (bug fix — prevents infinite loop)
+ *   ✓ Mid-session lapse check (clinical validity)
+ *   ✓ Entropy-to-frequency scaling documented (perceptual reasoning)
+ *   ✓ FFT cross-correlation flagged as TODO (production scaling)
+ *   ✓ Shrinkage factor noted as Phase 2 optimization
  *
- * Foundation: Watson & Pelli (1983). QUEST: A Bayesian adaptive
- * psychometric method. Perception & Psychophysics, 33(2), 113–120.
+ * Watson & Pelli (1983): QUEST: A Bayesian adaptive psychometric method.
+ * Perception & Psychophysics, 33(2), 113–120.
  *
- * Weber-Fechner: ΔI/I = k — all thresholds in log₁₀ space.
+ * All thresholds in log₁₀ space (Weber-Fechner: ΔI/I = k).
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -23,318 +23,267 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type HapticTestType =
-    | 'frequency_discrimination'   // Can user distinguish 80Hz from 100Hz?
-    | 'amplitude_discrimination'   // Can user detect 10% amplitude change?
-    | 'pattern_recognition'        // Can user identify 8-beat eigenstate pattern?
-    | 'spatial_localisation'       // Can user locate which body region vibrated?
-    | 'temporal_order';            // Can user detect which of two pulses came first?
+    | 'frequency_discrimination'
+    | 'amplitude_discrimination'
+    | 'pattern_recognition'
+    | 'spatial_localisation'
+    | 'temporal_order';
 
 export interface QUESTParams {
-    tGuess:    number;  // Initial threshold estimate (log₁₀ units)
-    tGuessSd:  number;  // Prior SD (log₁₀ units) — tighter = faster convergence
-    pThreshold:number;  // Target performance level (0.75 = 75% correct)
-    beta:      number;  // Weibull slope (steeper = sharper psychometric function)
-    delta:     number;  // Lapse rate (fraction of trials with random response)
-    gamma:     number;  // Chance performance (0.5 for 2-AFC, 0.33 for 3-AFC)
+    tGuess:     number;
+    tGuessSd:   number;
+    pThreshold: number;
+    beta:       number;
+    delta:      number;
+    gamma:      number;
 }
 
 export interface TrialRecord {
     trialN:    number;
-    intensity: number;  // log₁₀ stimulus intensity
-    response:  boolean; // true = correct
-    isCatch:   boolean; // true = suprathreshold catch trial
-    rt:        number;  // reaction time (ms)
+    intensity: number;
+    response:  boolean;
+    isCatch:   boolean;
+    rt:        number;
     timestamp: number;
 }
 
 export interface QUESTResult {
-    thresholdLog10:  number;  // Estimated threshold in log₁₀ units
-    thresholdLinear: number;  // Back-transformed to linear units
-    posteriorSD:     number;  // Uncertainty — smaller = more confident
+    thresholdLog10:  number;
+    thresholdLinear: number;
+    posteriorSD:     number;
     trialsCompleted: number;
-    converged:       boolean; // posteriorSD < 0.1 log₁₀ units
-    lapseRate:       number;  // Fraction of catch trials missed (should be < 0.25)
-    sessionValid:    boolean; // false if lapseRate ≥ 0.25
+    converged:       boolean;
+    lapseRate:       number;
+    sessionValid:    boolean;
     catchTrialCount: number;
     catchFailures:   number;
+    hitMaxTrials:    boolean;   // NEW: flag if stopped by limit not convergence
     trials:          TrialRecord[];
 }
 
 export interface PopulationPrior {
-    populationMu:    number;  // Running population mean (log₁₀)
-    populationSigma: number;  // Running population SD  (log₁₀)
-    n:               number;  // Number of participants contributing
-    lastUpdated:     number;  // Timestamp
+    populationMu:    number;
+    populationSigma: number;
+    n:               number;
+    lastUpdated:     number;
+}
+
+export interface CatchTrialConfig {
+    insertEveryN:        number;
+    suprathresholdBoost: number;
+    lapseThreshold:      number;
+    // NEW: mid-session abort threshold — pause if this exceeded early
+    midSessionAbortRate: number;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DEFAULT PARAMS — conservative priors for new population
+// DEFAULTS
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const DEFAULT_PARAMS: Record<HapticTestType, QUESTParams> = {
-    frequency_discrimination: {
-        tGuess: 1.0, tGuessSd: 0.5, pThreshold: 0.75,
-        beta: 3.5, delta: 0.02, gamma: 0.5,
-    },
-    amplitude_discrimination: {
-        tGuess: 0.8, tGuessSd: 0.4, pThreshold: 0.75,
-        beta: 3.5, delta: 0.02, gamma: 0.5,
-    },
-    pattern_recognition: {
-        tGuess: 1.2, tGuessSd: 0.6, pThreshold: 0.75,
-        beta: 2.5, delta: 0.05, gamma: 0.33,
-    },
-    spatial_localisation: {
-        tGuess: 0.9, tGuessSd: 0.4, pThreshold: 0.75,
-        beta: 3.0, delta: 0.02, gamma: 0.25,
-    },
-    temporal_order: {
-        tGuess: 1.1, tGuessSd: 0.5, pThreshold: 0.75,
-        beta: 3.5, delta: 0.02, gamma: 0.5,
-    },
+    frequency_discrimination: { tGuess:1.0,tGuessSd:0.5,pThreshold:0.75,beta:3.5,delta:0.02,gamma:0.5 },
+    amplitude_discrimination:  { tGuess:0.8,tGuessSd:0.4,pThreshold:0.75,beta:3.5,delta:0.02,gamma:0.5 },
+    pattern_recognition:       { tGuess:1.2,tGuessSd:0.6,pThreshold:0.75,beta:2.5,delta:0.05,gamma:0.33 },
+    spatial_localisation:      { tGuess:0.9,tGuessSd:0.4,pThreshold:0.75,beta:3.0,delta:0.02,gamma:0.25 },
+    temporal_order:            { tGuess:1.1,tGuessSd:0.5,pThreshold:0.75,beta:3.5,delta:0.02,gamma:0.5 },
+};
+
+export const DEFAULT_CATCH_CONFIG: CatchTrialConfig = {
+    insertEveryN:        8,
+    suprathresholdBoost: 2.0,
+    lapseThreshold:      0.25,
+    midSessionAbortRate: 0.5,   // NEW: abort if 50%+ of early catches missed
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FIX 2 (Priority 2): POPULATION PRIOR MANAGER
-// Bayesian conjugate prior update — reduces calibration time 60-70%
-// after 50+ RNIB participants.
+// POPULATION PRIOR MANAGER
 // ─────────────────────────────────────────────────────────────────────────────
 
 export class PopulationPriorManager {
     private priors: Map<HapticTestType, PopulationPrior> = new Map();
-    private readonly MIN_N_FOR_PRIOR = 10; // Need ≥10 participants before using
+    private readonly MIN_N_FOR_PRIOR = 10;
 
-    /**
-     * Update population estimate after each completed user session.
-     * Uses online Bayesian update: new posterior becomes next prior.
-     */
-    updateEstimate(
-        testType: HapticTestType,
-        userThreshold: number,   // log₁₀ units
-        userSD:        number,   // posterior SD from converged QUEST
-    ): void {
+    updateEstimate(testType: HapticTestType, userThreshold: number, userSD: number): void {
         const prior = this.priors.get(testType);
-
         if (!prior) {
             this.priors.set(testType, {
-                populationMu:    userThreshold,
-                populationSigma: userSD,
-                n:               1,
-                lastUpdated:     Date.now(),
+                populationMu: userThreshold, populationSigma: userSD,
+                n: 1, lastUpdated: Date.now(),
             });
             return;
         }
-
-        // Online Bayesian update (Gaussian conjugate)
-        const n_new = prior.n + 1;
-        const mu_new = (prior.n * prior.populationMu + userThreshold) / n_new;
-        const sigma_new = Math.sqrt(
+        const n_new    = prior.n + 1;
+        const mu_new   = (prior.n * prior.populationMu + userThreshold) / n_new;
+        const sig_new  = Math.sqrt(
             ((prior.n - 1) * prior.populationSigma ** 2
                 + (userThreshold - prior.populationMu) ** 2
                 + userSD ** 2
             ) / (n_new - 1)
         );
-
         prior.populationMu    = mu_new;
-        prior.populationSigma = sigma_new;
+        prior.populationSigma = sig_new;
         prior.n               = n_new;
         prior.lastUpdated     = Date.now();
     }
 
-    /**
-     * For a new user: return population-informed prior with shrinkage.
-     * Tighter sigma → faster convergence for new participants.
-     */
     getPrior(testType: HapticTestType): QUESTParams {
-        const base   = DEFAULT_PARAMS[testType];
-        const prior  = this.priors.get(testType);
+        const base  = DEFAULT_PARAMS[testType];
+        const prior = this.priors.get(testType);
+        if (!prior || prior.n < this.MIN_N_FOR_PRIOR) return base;
 
-        if (!prior || prior.n < this.MIN_N_FOR_PRIOR) {
-            return base; // Not enough data — use default
-        }
-
-        return {
-            ...base,
-            tGuess:   prior.populationMu,
-            tGuessSd: prior.populationSigma * 0.7, // Shrink toward population
-        };
+        // VVV note: shrinkage = 0.7 is hardcoded here intentionally for MVP.
+        // Phase 2 optimization: shrinkage = f(n) = 0.5 + 0.5*(1/√n)
+        // gives tighter convergence as population grows. Not critical for N<50.
+        const shrinkage = 0.7;
+        return { ...base, tGuess: prior.populationMu, tGuessSd: prior.populationSigma * shrinkage };
     }
 
-    getStats(): Record<HapticTestType, { n: number; mu: number; sigma: number } | null> {
-        const result = {} as Record<HapticTestType, { n: number; mu: number; sigma: number } | null>;
-        const types: HapticTestType[] = [
-            'frequency_discrimination', 'amplitude_discrimination',
-            'pattern_recognition', 'spatial_localisation', 'temporal_order',
-        ];
-        for (const t of types) {
+    getStats(): Record<string, { n:number; mu:number; sigma:number }|null> {
+        const result: Record<string, { n:number; mu:number; sigma:number }|null> = {};
+        for (const t of Object.keys(DEFAULT_PARAMS) as HapticTestType[]) {
             const p = this.priors.get(t);
-            result[t] = p ? { n: p.n, mu: p.populationMu, sigma: p.populationSigma } : null;
+            result[t] = p ? { n:p.n, mu:p.populationMu, sigma:p.populationSigma } : null;
         }
         return result;
     }
 
-    /** Persist to backend after RNIB study sessions */
     async save(endpoint: string): Promise<void> {
-        const data: Record<string, PopulationPrior> = {};
-        for (const [k, v] of this.priors) data[k] = v;
-        await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        }).catch(() => {});
+        const data: Record<string,PopulationPrior> = {};
+        for (const [k,v] of this.priors) data[k] = v;
+        await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
     }
 
     async load(endpoint: string): Promise<void> {
         try {
-            const res  = await fetch(endpoint);
-            const data = await res.json() as Record<string, PopulationPrior>;
-            for (const [k, v] of Object.entries(data)) {
-                this.priors.set(k as HapticTestType, v);
-            }
-        } catch { /* silent — start fresh */ }
+            const data = await (await fetch(endpoint)).json() as Record<string,PopulationPrior>;
+            for (const [k,v] of Object.entries(data)) this.priors.set(k as HapticTestType, v);
+        } catch { /* start fresh */ }
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FIX 1 (Priority 1): CATCH TRIAL ENGINE
-// Clinical validity — RNIB and any IRB will require this.
-// Catch trials = suprathreshold stimuli presented occasionally.
-// A participant who misses them is inattentive or not understanding the task.
+// CATCH TRIAL UTILITIES
 // ─────────────────────────────────────────────────────────────────────────────
 
-export interface CatchTrialConfig {
-    insertEveryN:       number;   // Insert a catch trial every N trials
-    suprathresholdBoost:number;   // log₁₀ units above current threshold
-    lapseThreshold:     number;   // Flag session if lapse rate ≥ this (0.25)
+export function shouldInsertCatch(trialN: number, cfg = DEFAULT_CATCH_CONFIG): boolean {
+    return trialN > 0 && trialN % cfg.insertEveryN === 0;
 }
 
-export const DEFAULT_CATCH_CONFIG: CatchTrialConfig = {
-    insertEveryN:        8,     // Every 8th trial
-    suprathresholdBoost: 2.0,   // Well above threshold — trivially detectable
-    lapseThreshold:      0.25,  // > 25% missed = session flagged
-};
-
-export function shouldInsertCatch(trialN: number, config = DEFAULT_CATCH_CONFIG): boolean {
-    return trialN > 0 && trialN % config.insertEveryN === 0;
-}
-
-export function getCatchIntensity(
-    currentThresholdLog10: number,
-    config = DEFAULT_CATCH_CONFIG,
-): number {
-    return currentThresholdLog10 + config.suprathresholdBoost;
+export function getCatchIntensity(threshold: number, cfg = DEFAULT_CATCH_CONFIG): number {
+    return threshold + cfg.suprathresholdBoost;
 }
 
 export function evaluateLapses(
-    trials:  TrialRecord[],
-    config = DEFAULT_CATCH_CONFIG,
-): { lapseRate: number; sessionValid: boolean; catchCount: number; failures: number } {
-    const catchTrials  = trials.filter(t => t.isCatch);
-    const catchFailed  = catchTrials.filter(t => !t.response);
-    const lapseRate    = catchTrials.length > 0
-        ? catchFailed.length / catchTrials.length
-        : 0;
+    trials: TrialRecord[],
+    cfg = DEFAULT_CATCH_CONFIG,
+): { lapseRate:number; sessionValid:boolean; catchCount:number; failures:number } {
+    const catches  = trials.filter(t => t.isCatch);
+    const failures = catches.filter(t => !t.response).length;
+    const lapseRate = catches.length > 0 ? failures / catches.length : 0;
+    return { lapseRate, sessionValid: lapseRate < cfg.lapseThreshold, catchCount: catches.length, failures };
+}
+
+// NEW (VVV Priority 1): Mid-session lapse check
+// Returns true if session should be paused/aborted early
+export function checkMidSessionLapse(
+    trials:   TrialRecord[],
+    cfg = DEFAULT_CATCH_CONFIG,
+): { shouldAbort: boolean; currentLapseRate: number; message: string } {
+    const catches   = trials.filter(t => t.isCatch);
+    if (catches.length === 0) return { shouldAbort:false, currentLapseRate:0, message:'No catch trials yet' };
+
+    const failures     = catches.filter(t => !t.response).length;
+    const currentRate  = failures / catches.length;
+    const shouldAbort  = currentRate >= cfg.midSessionAbortRate;
+
     return {
-        lapseRate,
-        sessionValid: lapseRate < config.lapseThreshold,
-        catchCount:   catchTrials.length,
-        failures:     catchFailed.length,
+        shouldAbort,
+        currentLapseRate: currentRate,
+        message: shouldAbort
+            ? `High lapse rate (${(currentRate*100).toFixed(0)}%) — pause and re-instruct participant`
+            : `Lapse rate nominal (${(currentRate*100).toFixed(0)}%)`,
     };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FIX 3 (Priority 3): ADAPTIVE TRANSITION TIME
-// Fixed 50ms was too fast for low-entropy states.
-// Now derived from dominant oscillation frequency.
+// ADAPTIVE TRANSITION TIME (VVV Fix 3 — with documented perceptual reasoning)
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Compute smooth transition time based on entropy h.
+ * Entropy h ∈ [0,1] maps to perceptual frequency range 0.5–4.5 Hz.
  *
- * Physics: transition_time ≈ 2 / dominant_frequency
- * h controls phase clock φ(t) = 2πht, so dominant freq ≈ h * f_range
+ * Perceptual reasoning (documented per VVV request):
+ *   - Haptic sensitivity peak: ~2 Hz (Meissner corpuscles, flutter detection)
+ *   - Audio temporal resolution: ~4 Hz minimum for pitch change detection
+ *   - Very low frequencies (<0.5 Hz) cause haptic adaptation (receptor fatigue)
+ *   - The 0.5 Hz floor prevents the static h≈0 case from producing no sensation
  *
- * Low h (ordered market): slow oscillation → longer transition (up to ~1000ms)
- * High h (chaotic market): fast oscillation → shorter transition (~50ms min)
+ * Physics: transition_time ≈ 2 / f_dominant (two full cycles for smooth blend)
  */
 export function getTransitionTimeMs(h: number): number {
-    // Dominant oscillation frequency: 0.5 Hz (h=0) to 4.5 Hz (h=1)
-    const dominantFreqHz = 0.5 + h * 4.0;
-
-    // Transition time = 2 / freq (in seconds → ms)
-    const transitionMs = (2.0 / dominantFreqHz) * 1000;
-
-    // Clamp: 50ms minimum (too short feels jumpy), 1000ms max (too long feels laggy)
+    // Perceptual frequency scaling (not a direct 1:1 with φ(t) = 2πht)
+    // φ(t) = 2πht controls phase; this controls perceptual update smoothness
+    const dominantFreqHz = 0.5 + h * 4.0;   // 0.5 Hz (h=0) → 4.5 Hz (h=1)
+    const transitionMs   = (2.0 / dominantFreqHz) * 1000;
     return Math.max(50, Math.min(1000, transitionMs));
 }
 
-// Precomputed table for fast lookup
-export const TRANSITION_TIME_TABLE = Array.from({ length: 11 }, (_, i) => ({
-    h: i / 10,
-    transitionMs: getTransitionTimeMs(i / 10),
-}));
+export const TRANSITION_TIME_TABLE = Array.from(
+    { length: 11 }, (_,i) => ({ h: i/10, ms: getTransitionTimeMs(i/10) })
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FIX 4 (Priority 5): TEMPORAL PHASE-LOCK VERIFICATION
-// Cross-correlation based — checks temporal alignment over multiple cycles,
-// not just instantaneous amplitude match.
+// TEMPORAL PHASE-LOCK VERIFICATION (VVV Fix 4)
+// Cross-correlation based — checks temporal alignment, not just amplitude.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Verify phase-locking via cross-correlation.
- *
- * Correct relationships:
- *   Audio  ←→  Haptic:  peak lag ≈ 0 samples (in-phase: sin φ = sin φ)
- *   Audio  ←→  Visual:  peak lag ≈ sampleRate/4 samples (90° quadrature: sin φ vs cos φ)
- */
 export function verifyPhaseLockTemporal(
-    audioSignal:  number[],
-    hapticSignal: number[],
-    visualSignal: number[],
-    sampleRate:   number = 48000,
+    audioSignal:     number[],
+    hapticSignal:    number[],
+    visualSignal:    number[],
+    sampleRate  = 48000,
     toleranceSamples = 2,
 ): {
-    audioHapticLagSamples: number;
-    audioVisualLagSamples: number;
+    audioHapticLagSamples:     number;
+    audioVisualLagSamples:     number;
     expectedQuadratureSamples: number;
-    audioHapticLocked: boolean;
-    audioVisualQuadrature: boolean;
-    fullyLocked: boolean;
-    phaseErrorDegrees: { audioHaptic: number; audioVisual: number };
+    audioHapticLocked:         boolean;
+    audioVisualQuadrature:     boolean;
+    fullyLocked:               boolean;
+    phaseErrorDegrees: { audioHaptic:number; audioVisual:number };
 } {
-    const audioHapticLag = findPeakLag(audioSignal, hapticSignal);
-    const audioVisualLag = findPeakLag(audioSignal, visualSignal);
-    const quarterCycle   = Math.round(sampleRate / 4);  // Samples in 90°
+    const ahLag = findPeakLagBrute(audioSignal, hapticSignal);
+    const avLag = findPeakLagBrute(audioSignal, visualSignal);
+    const qc    = Math.round(sampleRate / 4);   // 90° in samples
 
-    const audioHapticLocked    = Math.abs(audioHapticLag) <= toleranceSamples;
-    const audioVisualQuadrature = Math.abs(Math.abs(audioVisualLag) - quarterCycle) <= toleranceSamples;
-
-    // Convert lag to degrees (360° = sampleRate samples at 1Hz,
-    // but we care about relative phase so use fraction of period)
-    const audioHapticDeg = (audioHapticLag / sampleRate) * 360;
-    const audioVisualDeg = ((audioVisualLag - quarterCycle) / sampleRate) * 360;
+    const ahLocked = Math.abs(ahLag) <= toleranceSamples;
+    const avQuad   = Math.abs(Math.abs(avLag) - qc) <= toleranceSamples;
 
     return {
-        audioHapticLagSamples:     audioHapticLag,
-        audioVisualLagSamples:     audioVisualLag,
-        expectedQuadratureSamples: quarterCycle,
-        audioHapticLocked,
-        audioVisualQuadrature,
-        fullyLocked: audioHapticLocked && audioVisualQuadrature,
+        audioHapticLagSamples:     ahLag,
+        audioVisualLagSamples:     avLag,
+        expectedQuadratureSamples: qc,
+        audioHapticLocked:         ahLocked,
+        audioVisualQuadrature:     avQuad,
+        fullyLocked:               ahLocked && avQuad,
         phaseErrorDegrees: {
-            audioHaptic: audioHapticDeg,
-            audioVisual: audioVisualDeg,
+            audioHaptic: (ahLag / sampleRate) * 360,
+            audioVisual: ((avLag - qc) / sampleRate) * 360,
         },
     };
 }
 
-/** Cross-correlation peak lag via brute force (fine for short signals) */
-function findPeakLag(a: number[], b: number[]): number {
-    const n    = a.length;
+/**
+ * Brute-force cross-correlation — O(n²).
+ * Fine for RNIB study (offline, short ~100ms buffers).
+ * TODO (production): Replace with FFT-based cross-correlation O(n log n)
+ *   using: crossSpec = FFT(a) · conj(FFT(b)); corr = IFFT(crossSpec)
+ *   Requires zero-padding to next power of 2 for linear (not circular) correlation.
+ */
+function findPeakLagBrute(a: number[], b: number[]): number {
+    const n      = a.length;
     const maxLag = Math.min(n - 1, Math.round(n / 2));
-    let bestLag = 0;
-    let bestCorr = -Infinity;
-
+    let bestLag = 0, bestCorr = -Infinity;
     for (let lag = -maxLag; lag <= maxLag; lag++) {
         let corr = 0;
         for (let i = 0; i < n; i++) {
@@ -347,243 +296,199 @@ function findPeakLag(a: number[], b: number[]): number {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CORE QUEST ENGINE (v2.3)
+// CORE QUEST ENGINE — v2.3 with maxTrials safety (VVV bug fix)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export class QUESTStaircase {
-    private params:     QUESTParams;
-    private posterior:  number[];  // Log-probability distribution
-    private intensities:number[];  // Grid of log₁₀ intensities
-    private trials:     TrialRecord[] = [];
-    private trialCount  = 0;
-    private readonly N_GRID = 200;
-    private readonly testType: HapticTestType;
+    private params:      QUESTParams;
+    private posterior:   number[];
+    private intensities: number[];
+    private trials:      TrialRecord[] = [];
+    private trialCount   = 0;
+    private readonly N_GRID      = 200;
+    private readonly testType:    HapticTestType;
     private readonly catchConfig: CatchTrialConfig;
+    private readonly maxTrials:   number;     // VVV FIX: prevents infinite loop
 
     constructor(
-        testType:    HapticTestType,
-        params?:     Partial<QUESTParams>,
+        testType:     HapticTestType,
+        params?:      Partial<QUESTParams>,
         catchConfig?: Partial<CatchTrialConfig>,
+        maxTrials  = 60,   // VVV FIX: safety limit — if unusual thresholds, stop at 60
     ) {
         this.testType    = testType;
         this.catchConfig = { ...DEFAULT_CATCH_CONFIG, ...catchConfig };
         this.params      = { ...DEFAULT_PARAMS[testType], ...params };
-        const { tGuess, tGuessSd } = this.params;
+        this.maxTrials   = maxTrials;
 
-        // Build grid: tGuess ± 3σ
+        const { tGuess, tGuessSd } = this.params;
         const lo = tGuess - 3 * tGuessSd;
         const hi = tGuess + 3 * tGuessSd;
-        this.intensities = Array.from(
-            { length: this.N_GRID },
-            (_, i) => lo + (i / (this.N_GRID - 1)) * (hi - lo),
-        );
-        this.posterior = this.intensities.map(x =>
-            this.logNormalPdf(x, tGuess, tGuessSd)
-        );
+        this.intensities = Array.from({ length:this.N_GRID },
+            (_,i) => lo + (i/(this.N_GRID-1))*(hi-lo));
+        this.posterior   = this.intensities.map(x => this.logNormalPdf(x, tGuess, tGuessSd));
         this.normalisePosterior();
     }
 
-    /** Recommend next intensity. Inserts catch trials automatically. */
-    nextIntensity(): { intensity: number; isCatch: boolean } {
+    nextIntensity(): { intensity:number; isCatch:boolean } {
         if (shouldInsertCatch(this.trialCount, this.catchConfig)) {
-            const currentThreshold = this.currentThreshold();
-            return {
-                intensity: getCatchIntensity(currentThreshold, this.catchConfig),
-                isCatch:   true,
-            };
+            return { intensity: getCatchIntensity(this.currentThreshold(), this.catchConfig), isCatch:true };
         }
-        // MAP estimate of posterior for next trial
         const mapIdx = this.posterior.indexOf(Math.max(...this.posterior));
-        return { intensity: this.intensities[mapIdx], isCatch: false };
+        return { intensity: this.intensities[mapIdx], isCatch:false };
     }
 
-    /** Update posterior given response. */
     update(intensity: number, correct: boolean, isCatch: boolean, rt = 0): void {
         this.trialCount++;
-
         if (!isCatch) {
-            // Only update posterior on non-catch trials
             this.posterior = this.posterior.map((logP, i) => {
-                const pCorrect = this.psychometricFunction(
-                    intensity, this.intensities[i],
-                );
-                return logP + Math.log(correct ? pCorrect : 1 - pCorrect);
+                const pC = this.psychometricFn(intensity, this.intensities[i]);
+                return logP + Math.log(correct ? pC : 1 - pC);
             });
             this.normalisePosterior();
         }
-
-        this.trials.push({
-            trialN:    this.trialCount,
-            intensity,
-            response:  correct,
-            isCatch,
-            rt,
-            timestamp: Date.now(),
-        });
+        this.trials.push({ trialN:this.trialCount, intensity, response:correct, isCatch, rt, timestamp:Date.now() });
     }
 
-    /** Current threshold estimate (mean of posterior). */
+    // VVV FIX: Check mid-session lapse after each catch trial update
+    checkMidSession(): { shouldAbort:boolean; currentLapseRate:number; message:string } {
+        return checkMidSessionLapse(this.trials, this.catchConfig);
+    }
+
     currentThreshold(): number {
-        // Posterior mean
-        const sumW  = Math.exp(Math.max(...this.posterior)); // normalisation
         let mu = 0;
-        for (let i = 0; i < this.N_GRID; i++) {
-            mu += this.intensities[i] * Math.exp(this.posterior[i]);
-        }
+        for (let i = 0; i < this.N_GRID; i++) mu += this.intensities[i] * Math.exp(this.posterior[i]);
         return mu;
     }
 
-    /** Posterior SD — stopping criterion: < 0.1 log₁₀ units. */
     posteriorSD(): number {
         const mu = this.currentThreshold();
-        let variance = 0;
-        for (let i = 0; i < this.N_GRID; i++) {
-            variance += Math.exp(this.posterior[i]) * (this.intensities[i] - mu) ** 2;
-        }
-        return Math.sqrt(variance);
+        let v = 0;
+        for (let i = 0; i < this.N_GRID; i++) v += Math.exp(this.posterior[i]) * (this.intensities[i] - mu) ** 2;
+        return Math.sqrt(v);
     }
 
-    /** Should we stop? */
+    // VVV FIX: maxTrials in convergence check — no more infinite loops
     converged(): boolean {
+        if (this.trialCount >= this.maxTrials) return true;   // Safety stop
         return this.posteriorSD() < 0.1 && this.trialCount >= 15;
     }
 
-    /** Full result with all VVV fixes applied. */
     getResult(): QUESTResult {
-        const thresholdLog10 = this.currentThreshold();
-        const lapseStats     = evaluateLapses(this.trials, this.catchConfig);
-
+        const t    = this.currentThreshold();
+        const laps = evaluateLapses(this.trials, this.catchConfig);
         return {
-            thresholdLog10,
-            thresholdLinear: Math.pow(10, thresholdLog10),
+            thresholdLog10:  t,
+            thresholdLinear: Math.pow(10, t),
             posteriorSD:     this.posteriorSD(),
             trialsCompleted: this.trialCount,
-            converged:       this.converged(),
-            lapseRate:       lapseStats.lapseRate,
-            sessionValid:    lapseStats.sessionValid,
-            catchTrialCount: lapseStats.catchCount,
-            catchFailures:   lapseStats.failures,
+            converged:       this.posteriorSD() < 0.1,
+            lapseRate:       laps.lapseRate,
+            sessionValid:    laps.sessionValid,
+            catchTrialCount: laps.catchCount,
+            catchFailures:   laps.failures,
+            hitMaxTrials:    this.trialCount >= this.maxTrials,   // NEW flag
             trials:          [...this.trials],
         };
     }
 
-    // ── PRIVATE ─────────────────────────────────────────────────────────────
-
-    private psychometricFunction(x: number, threshold: number): number {
+    private psychometricFn(x: number, threshold: number): number {
         const { beta, delta, gamma } = this.params;
-        const pBase = 1 - Math.exp(-Math.pow(10, beta * (x - threshold)));
-        return gamma + (1 - gamma - delta) * pBase;
+        return gamma + (1 - gamma - delta) * (1 - Math.exp(-Math.pow(10, beta*(x-threshold))));
     }
-
     private logNormalPdf(x: number, mu: number, sigma: number): number {
         return -0.5 * ((x - mu) / sigma) ** 2;
     }
-
     private normalisePosterior(): void {
-        const maxVal = Math.max(...this.posterior);
-        this.posterior = this.posterior.map(p => p - maxVal);
-        const sumExp   = this.posterior.reduce((s, p) => s + Math.exp(p), 0);
-        this.posterior = this.posterior.map(p => p - Math.log(sumExp));
+        const maxV = Math.max(...this.posterior);
+        this.posterior = this.posterior.map(p => p - maxV);
+        const sumE = this.posterior.reduce((s, p) => s + Math.exp(p), 0);
+        this.posterior = this.posterior.map(p => p - Math.log(sumE));
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FIX 5 (Priority 4): 8D FALLBACK CLAIM — Patent enablement note
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * PATENT NOTE (for attorney John Arsino):
- *
- * VVV Venice AI flagged a potential enablement issue:
- * The patent references 2048D representation capacity (from the Adinkra
- * e₈ Cliffordinkra mathematical description), but the production
- * implementation is 8D.
- *
- * The separable tensor T_ijk = v_i·h_j·a_k works for any n — so 2048D
- * is mathematically enabled. But a patent examiner may ask for a working
- * embodiment.
- *
- * RECOMMENDATION: Add Claim 5 (or equivalent) as an explicit fallback:
- *
- * "Claim X: The system of Claim 1, wherein the state vector comprises
- *  exactly eight dimensions: volatility σ, rate of change δ, directionality d,
- *  persistence p, acceleration a, entropy h, cognitive load c₁, and
- *  sensory integration capacity c₂, ∈ [0,1] or [-1,1] as specified."
- *
- * This is already present as Claim 5 in RP-2026-001.
- * Confirm with attorney that Claim 5 is filed before any public disclosure.
- *
- * The 2048D capability should be described in the specification as a
- * "generalized embodiment" with the 8D case as the "preferred embodiment."
- * That satisfies 35 U.S.C. § 112 (enablement) without restricting the
- * broader claims.
- */
-export const PATENT_ENABLEMENT_NOTE = {
-    issue: '2048D claim vs 8D implementation',
-    risk: 'Patent examiner may require working 2048D embodiment',
-    mitigation: 'Claim 5 (8D specific) serves as fallback — already in RP-2026-001',
-    specLanguage: '8D = preferred embodiment; 2048D = generalized embodiment',
-    action: 'Confirm Claim 5 language with attorney before USPTO filing',
-} as const;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// CONVENIENCE: Run a complete calibration session
+// CALIBRATION SESSION RUNNER
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface CalibrationSession {
-    participantId:  string;
-    results:        Partial<Record<HapticTestType, QUESTResult>>;
-    totalTrials:    number;
-    durationMs:     number;
-    allValid:       boolean;
+    participantId: string;
+    results:       Partial<Record<HapticTestType, QUESTResult>>;
+    totalTrials:   number;
+    durationMs:    number;
+    allValid:      boolean;
+    abortedTests:  HapticTestType[];    // Tests aborted due to high lapse rate
 }
 
 export async function runCalibrationSession(
     participantId: string,
     testTypes:     HapticTestType[],
     priorManager:  PopulationPriorManager,
-    onTrial:       (
+    onTrial: (
         testType:  HapticTestType,
         intensity: number,
         isCatch:   boolean,
-    ) => Promise<{ correct: boolean; rt: number }>,
+    ) => Promise<{ correct:boolean; rt:number }>,
+    onMidSessionAbort?: (testType: HapticTestType, message: string) => Promise<'continue'|'abort'>,
 ): Promise<CalibrationSession> {
-    const start   = Date.now();
-    const results: Partial<Record<HapticTestType, QUESTResult>> = {};
-    let totalTrials = 0;
+    const start        = Date.now();
+    const results: Partial<Record<HapticTestType,QUESTResult>> = {};
+    const abortedTests: HapticTestType[] = [];
+    let totalTrials    = 0;
 
     for (const testType of testTypes) {
         const params  = priorManager.getPrior(testType);
         const quest   = new QUESTStaircase(testType, params);
+        let aborted   = false;
 
-        // Run until converged or 60-trial safety limit
-        while (!quest.converged() && quest['trialCount'] < 60) {
+        while (!quest.converged()) {
             const { intensity, isCatch } = quest.nextIntensity();
             const { correct, rt }        = await onTrial(testType, intensity, isCatch);
             quest.update(intensity, correct, isCatch, rt);
+
+            // VVV FIX: Mid-session lapse check after each catch trial
+            if (isCatch) {
+                const check = quest.checkMidSession();
+                if (check.shouldAbort && onMidSessionAbort) {
+                    const decision = await onMidSessionAbort(testType, check.message);
+                    if (decision === 'abort') {
+                        abortedTests.push(testType);
+                        aborted = true;
+                        break;
+                    }
+                    // 'continue' → re-instruct and proceed
+                }
+            }
         }
 
         const result = quest.getResult();
         results[testType] = result;
         totalTrials += result.trialsCompleted;
 
-        // Update population prior with this user's data
-        if (result.sessionValid) {
-            priorManager.updateEstimate(
-                testType,
-                result.thresholdLog10,
-                result.posteriorSD,
-            );
+        if (!aborted && result.sessionValid) {
+            priorManager.updateEstimate(testType, result.thresholdLog10, result.posteriorSD);
         }
     }
 
     return {
-        participantId,
-        results,
-        totalTrials,
-        durationMs: Date.now() - start,
-        allValid:   Object.values(results).every(r => r?.sessionValid ?? false),
+        participantId, results, totalTrials,
+        durationMs:  Date.now() - start,
+        allValid:    Object.values(results).every(r => r?.sessionValid ?? false) && abortedTests.length === 0,
+        abortedTests,
     };
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PATENT ENABLEMENT NOTE (for attorney John Arsino)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const PATENT_ENABLEMENT_NOTE = {
+    issue:       '2048D claim vs 8D preferred embodiment',
+    risk:        'Examiner may require working 2048D demonstration (35 U.S.C. § 112)',
+    mitigation:  'Claim 5 (RP-2026-001) covers 8D as preferred embodiment',
+    specLanguage:'8D = "preferred embodiment"; 2048D = "generalized embodiment enabled by the same separable tensor mathematics"',
+    action:      'Confirm Claim 5 is present and claim 1 describes n≥8 generically before USPTO filing',
+    vvvSource:   'VVV Venice AI review, March 2026',
+} as const;
 
 export default QUESTStaircase;

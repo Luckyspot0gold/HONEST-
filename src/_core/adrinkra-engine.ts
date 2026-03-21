@@ -228,10 +228,21 @@ export function opacityPulse(t: number, a: number, T: number = 1): number {
 }
 
 /**
+ * Adaptive decay constant — VVV Venice AI recommendation
+ * High δ (rapid change) → faster decay (transient information)
+ * Low δ  (stable state) → slower decay (durable information)
+ * k ∈ [0.05, 0.5]
+ */
+export function getDecayConstant(delta: number): number {
+    return 0.05 + 0.45 * Math.abs(delta);
+}
+
+/**
  * Haptic envelope — LaTeX §4
  * H(t) = vibe_amp · e^(-kt)
+ * k is now adaptive via getDecayConstant(δ) rather than hardcoded 0.5
  */
-export function hapticEnvelope(t: number, vibeAmp: number, k: number = 0.5): number {
+export function hapticEnvelope(t: number, vibeAmp: number, k: number): number {
     return vibeAmp * Math.exp(-k * t);
 }
 
@@ -455,7 +466,8 @@ export class CrossModalEncodingEngine {
         // ── AUDIO (§2) ──
         const fp = pitchFrequency(state.sigma, this.fb);
         const amp = audioAmplitude(state.delta);
-        const k = 0.5; // Decay constant
+        // FIX A (VVV): Adaptive decay — fast for volatile states, slow for stable
+        const k = getDecayConstant(state.delta);
 
         const audio: AudioOutput = {
             frequency: fp,
@@ -503,7 +515,16 @@ export class CrossModalEncodingEngine {
         const haptic: HapticOutput = {
             vibeAmplitude: vibeAmp,
             pulseFrequency: pulseF,
-            pattern: Array.from({ length: 8 }, (_, i) => vibeAmp * (bosonic[i] ?? 0.5)),
+            // FIX B (VVV): Remap bosonic weights to perceptual range [0.2, 1.0]
+            // Raw bosonic values cluster near zero — insufficient dynamic range for beat discrimination.
+            // Remapping ensures adjacent beats are always distinguishable.
+            // TODO: Validate beat discrimination in RNIB pilot (n=5–10) before full study.
+            pattern: (() => {
+                const raw = Array.from({ length: 8 }, (_, i) => bosonic[i] ?? 0.5);
+                const min = Math.min(...raw), max = Math.max(...raw);
+                const range = max - min || 1; // prevent div-by-zero
+                return raw.map(v => vibeAmp * (0.2 + 0.8 * (v - min) / range));
+            })(),
             rhythm: fermionic.some(v => Math.abs(v) > 0.5) ? 'irregular' : 'regular',
             duration: 1000 + state.p * 2000,
             attack: 50 + state.a * 100,
@@ -564,8 +585,8 @@ export class CrossModalEncodingEngine {
     }
 
     /**
-     * Verify phase lock at time t.
-     * A(t)·sin(φ) = C(t)·cos(φ) = H(t)·sin(φ)
+     * Instantaneous phase-lock check — for real-time runtime monitoring.
+     * A(t)·sin(φ) ≈ H(t)·sin(φ), C(t)·cos(φ) (quadrature)
      */
     checkPhaseLock(output: SensoryOutput, t: number): {
         locked: boolean;
@@ -584,6 +605,68 @@ export class CrossModalEncodingEngine {
             visualVal: C * Math.cos(phi),
             hapticVal: H * Math.sin(phi),
             phi,
+        };
+    }
+
+    /**
+     * FIX C (VVV): Temporal phase-lock verification — for clinical/session validation.
+     * Uses cross-correlation over a sample window to verify true temporal alignment,
+     * not just coincidental amplitude match at one time point.
+     *
+     * Call this once per study session (not in real-time loop).
+     * Requires a pre-recorded buffer of N samples from each modality.
+     *
+     * @param audioBuffer   — N samples of A(t)·sin(φ(t))
+     * @param hapticBuffer  — N samples of H(t)·sin(φ(t))  [should peak at lag ≈ 0]
+     * @param visualBuffer  — N samples of C(t)·cos(φ(t))  [should peak at lag ≈ SR/4]
+     * @param sampleRate    — samples per second (default 48000)
+     */
+    verifyPhaseLockTemporal(
+        audioBuffer:  number[],
+        hapticBuffer: number[],
+        visualBuffer: number[],
+        sampleRate = 48000,
+    ): {
+        audioHapticLocked:   boolean;
+        audioVisualQuadrature: boolean;
+        fullyLocked:         boolean;
+        audioHapticLagMs:    number;
+        audioVisualLagMs:    number;
+        phaseErrorDegrees: { audioHaptic: number; audioVisual: number };
+    } {
+        const n       = audioBuffer.length;
+        const maxLag  = Math.min(n - 1, Math.round(n / 2));
+        const qcSamples = Math.round(sampleRate / 4);
+        const tol     = 2; // samples
+
+        // Cross-correlation — brute force (acceptable for offline session validation)
+        // TODO (production): Replace with FFT-based O(n log n) cross-correlation
+        const findLag = (a: number[], b: number[]): number => {
+            let bestLag = 0, bestCorr = -Infinity;
+            for (let lag = -maxLag; lag <= maxLag; lag++) {
+                let corr = 0;
+                for (let i = 0; i < n; i++) {
+                    const j = i + lag;
+                    if (j >= 0 && j < n) corr += a[i] * b[j];
+                }
+                if (corr > bestCorr) { bestCorr = corr; bestLag = lag; }
+            }
+            return bestLag;
+        };
+
+        const ahLag = findLag(audioBuffer, hapticBuffer);
+        const avLag = findLag(audioBuffer, visualBuffer);
+
+        return {
+            audioHapticLocked:    Math.abs(ahLag) <= tol,
+            audioVisualQuadrature: Math.abs(Math.abs(avLag) - qcSamples) <= tol,
+            fullyLocked:          Math.abs(ahLag) <= tol && Math.abs(Math.abs(avLag) - qcSamples) <= tol,
+            audioHapticLagMs:     (ahLag / sampleRate) * 1000,
+            audioVisualLagMs:     (avLag / sampleRate) * 1000,
+            phaseErrorDegrees: {
+                audioHaptic: (ahLag / sampleRate) * 360,
+                audioVisual: ((avLag - qcSamples) / sampleRate) * 360,
+            },
         };
     }
 

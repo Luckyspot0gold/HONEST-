@@ -1,4 +1,4 @@
-
+<img width="1020" height="680" alt="image" src="https://github.com/user-attachments/assets/611d97d7-76c8-4b87-847d-1842af1e3616" />
 
 ---
 # H.O.N.E.S.T. Truth Matrix – 6D Market Eigenstate Demo #
@@ -254,6 +254,7 @@ limitations under the License.
 Sheridan, WY & Denver, CO
 
 - **Website**: [realityprotocol.io](https://realityprotocol.io)
+- **Demo** https://2y4c2atom332w.ok.kimi.link
 - **Email**: StoneYardGames@proton.me
 - **Discord**: StoneYard
 - **Twitter/X**: @Goldandrainbows

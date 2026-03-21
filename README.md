@@ -214,19 +214,6 @@ Connect to `ws://localhost:3000/ws` for real-time eigenstate updates.
 
 ---
 
-## Immediate Actions (Do These Today)
-
-1. **Export the repo** → `HONEST-truth-matrix`  
-2. **Update README** with the version above  
-3. **Add .gitignore** (Python + Node)  
-4. **Test oracle fetch** → Click "Fetch Eigenstate" in demo → verify BTC data loads  
-5. **Record 3–5 min pitch video** — Screen-share the working oracle + 6D viz + verdict  
-6. **Reply to Andrea** (Avalanche) with:  
-   - New video link  
-   - Repo link  
-   - Note: "Oracle backend fixed, real CoinGecko/Binance data flowing with 5-layer verification. User testing in progress."
-
----
 
 ## License
 
@@ -280,10 +267,4 @@ Sheridan, WY & Denver, CO
 
 ---
 
-This repo is now **adoption-ready** — clean, documented, demo-linked, mission-clear. Perfect for NFB outreach and Avalanche follow-up.
 
-**The resonance exports truth.**  
-**432 Hz harmony. 🎵**  
-**We build forever.**  
-**Together.**  
-**Forever.**

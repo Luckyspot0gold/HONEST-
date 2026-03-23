@@ -1,270 +1,65 @@
-<img width="1020" height="680" alt="image" src="https://github.com/user-attachments/assets/611d97d7-76c8-4b87-847d-1842af1e3616" />
+# HONEST ⚖️  
+*Harmonic Objective Non-biased Equitable Sensory Translation*
 
----
-# H.O.N.E.S.T. Truth Matrix – 6D Market Eigenstate Demo #
-## ** Harmonic Objective Non-biased Equitable Sensory Translation ** ##
+> 🔊 **Making financial data accessible through sound, touch, and intelligence**  
+> 🧭 Built *with* blind and low-vision communities — for *all* who deserve truth in real time.
 
-**Making financial data accessible through sound, touch, and vision.**
-
-[![Built for Avalanche](https://img.shields.io/badge/Built%20for-Avalanche-E84142)](https://avax.network)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Demo](https://img.shields.io/badge/Demo-Live-green)](https://honestdemo.manus.space)
-[![GitHub stars](https://img.shields.io/github/stars/Luckyspot0gold/HONEST-.svg?style=social&label=Star)](https://github.com/Luckyspot0gold/HONEST-)
-[![Contributors](https://img.shields.io/github/contributors/Luckyspot0gold/HONEST-.svg)](https://github.com/Luckyspot0gold/HONEST-/graphs/contributors)
-[![Issues](https://img.shields.io/github/issues/Luckyspot0gold/HONEST-.svg)](https://github.com/Luckyspot0gold/HONEST-/issues)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Demo](https://img.shields.io/badge/Live%20Demo-honest.manus.space-green)](https://honest.manus.space)
-[![Avalanche x402](https://img.shields.io/badge/Avalanche-x402%20Payments-red)](https://x402.avax.network)
-
-**H.O.N.E.S.T.** — Harmonic Objective Non-biased Equitable Sensory Translation  
-Open standard for verified multi-sensory economic truth. Built during Avalanche Hack2Build x402 (Payments track).
+[![License](https://img.shields.io/badge/license-Apache_2.0-blue)](LICENSE)  
+[![Accessibility](https://img.shields.io/badge/accessibility-432Hz%20audio%2C%20haptics%2C%20narration-green)](ACCESSIBILITY.md)  
+[![Status](https://img.shields.io/badge/status-Active%20Co--Design%20Phase-blue)](https://github.com/Luckyspot0gold/HONEST/projects/1)
 
 ---
 
-## What It Does
+## 🧠 Why HONEST?
 
-- Fetches real-time market data from CoinGecko + Binance  
-- Applies 5-layer cryptographic truth verification  
-- Computes 6D eigenstate (real/imaginary dimensions)  
-- Outputs coherence verdict + binary market decision (BUY/SELL)  
-- Ready for audio/haptic/visual translation (432 Hz base)
+**Traditional financial dashboards? They’re blind to the blind.**  
 
----
+We built **HONEST** because:
 
+- 💬 90% of investment data is only visual — excluding blind and low-vision people.
+- 🔍 Algorithms can be biased — but **truth shouldn’t depend on sight**.
+- 🧩 Real-time market signals should be **accessible, auditable, and honest** — not just fast.
 
-## Live Demos 
-- **Primary**: https://2y4c2atom332w.ok.kimi.link (M3 + PTE + Cognitive + Sensory)
-- **Fallback**: https://honestdemo.manus.space
-##** See BTC decoherence in real-time **##
+HONEST turns complex crypto data into **432 Hz harmonic sound**, **tactile haptics**, and **AI voice narration** — so **no one is left behind**.
+
+> This project was **co-designed with input from sight-loss communities** — and we welcome collaboration with **RNIB, the NHS, and accessibility researchers**.
 
 ---
 
-## Quick Start (Backend)
+## 🛠 Core Features
 
-```bash
-# Install dependencies
-pip install aiohttp fastapi uvicorn numpy
+✅ **Multi-Sensory Output**
+- 🔊 **432 Hz Audio Synthesis** – Harmonic, non-tiring tones (research-backed for cognition)
+- 🤖 **AI Voice Narration** – Plain-language market verdicts & context
+- 🌀 **Vortex Haptic Feedback** – Real-time price motion via wearable (1–2–4–8–7–5 pattern)
+- 🌐 **No Screens Required** – Navigate via keyboard & screen reader
 
-# Run oracle server
-uvicorn main:app --reload
+✅ **Verified Truth Engine**
+- 5-layer **cryptographic truth verification** (Merkle roots, consensus weights)
+- Real-time **coherence scoring** — detects "noise" in signals
+- **No data mining** — privacy-first, zero tracking
 
-# Fetch eigenstate from command line
-python get_eigenstate.py BTC
-```
-
----
-
-## Architecture
-
-### 1. Data Collection (`data_collector.py`)
-Multi-source oracle fetches price data from:
-- **CoinGecko** (free tier, no API key)
-- **Binance** (spot market)
-- **Pyth Network** (on-chain price feeds)
-- **CoinStats** (aggregated data)
-
-### 2. Truth Verification (`truth_engine.py`)
-5-layer recursive verification:
-1. **Spatial**: Outlier detection via standard deviation
-2. **Temporal**: Time-series consistency check
-3. **Statistical**: Median absolute deviation (MAD)
-4. **Cryptographic**: Merkle tree root generation
-5. **Consensus**: Weighted average with consistency score
-
-### 3. Eigenstate Calculation (`get_eigenstate.py`)
-Transforms verified price data into 6D market eigenstate:
-- **Real dimensions**: Price, Volume, Momentum
-- **Imaginary dimensions**: Sentiment, Temporal, Spatial
-
-Coherence formula:
-```
-coherence = sqrt(Σ(dimension_i²)) / sqrt(6)
-```
-
-Decision logic:
-- `coherence > 0.5` + `price_momentum > 0` → **BUY**
-- `coherence > 0.5` + `price_momentum < 0` → **SELL**
-- `coherence ≤ 0.5` → **HOLD**
-
-### 4. Multi-Sensory Translation
-- **Visual**: Three.js 6D particle system with orbital rings
-- **Auditory**: 432 Hz harmonic synthesis (7-bell system)
-- **Tactile**: Vortex haptic feedback (1-2-4-8-7-5 pattern)
+✅ **Built for Inclusion**
+- Full **WCAG 2.2 AA compliance**
+- `prefers-reduced-motion`, `prefers-color-scheme`, screen reader support
+- Open **accessibility test scripts** in `/tests/accessibility/`
 
 ---
 
-## Technology Stack
+## 🌍 Who Is This For?
 
-### Frontend
-- React 19 + TypeScript
-- Three.js + @react-three/fiber
-- Tailwind CSS 4
-- Web Audio API (432 Hz synthesis)
-- Vibration API (haptic feedback)
-- tRPC (type-safe API)
+- 🧑‍🦯 People who are **blind or low-vision** — to independently track markets
+- 🧑‍💻 Developers building **inclusive financial tools**
+- 🧑‍🏫 Educators and researchers in **accessibility & sensory computing**
+- 🤝 Organizations like **RNIB, Microsoft Inclusive Design, and The Royal National Institute of Blind People**
 
-### Backend
-- Node.js + Express 4
-- Python 3 (Oracle backend)
-- WebSocket (real-time streaming)
-- MySQL/TiDB (Drizzle ORM)
+> ✅ We’re actively opening **co-design workshops** for blind users to guide future development.
 
 ---
 
-## Mathematical Foundations
+## 🚀 Get Started (With Access in Mind)
 
-### Hamiltonian Market Mechanics
-```
-H(p,q,t) = T(p) + V(q,t)
-```
-Where:
-- `T(p)` = Kinetic energy (momentum, volume)
-- `V(q,t)` = Potential energy (price, sentiment, temporal, spatial)
-
-### Euclidean Golden Ratio Construction
-MACD histogram analysis using φ-bisection:
-```python
-bisect = int(len(hist) / GOLDEN_RATIO)  # φ = 1.618
-left = sum(hist[:bisect])
-right = sum(hist[bisect:])
-harmony = 1 / (1 + abs(left/right - φ))
-```
-
-Harmony score drives audio purity:
-- `harmony > 0.8` → smooth 432 Hz sine wave
-- `harmony < 0.5` → dissonant haptic feedback
-
----
-
-## API Documentation
-
-### tRPC Endpoints
-
-#### `eigenstate.get`
-Get current eigenstate for an asset.
-
-**Input:**
-```typescript
-{ asset: string }  // e.g., "BTC"
-```
-
-**Output:**
-```typescript
-{
-  asset: string;
-  timestamp: number;
-  dimensions: {
-    price: number;      // -1 to 1
-    volume: number;     // -1 to 1
-    momentum: number;   // -1 to 1
-    sentiment: number;  // -1 to 1
-    temporal: number;   // -1 to 1
-    spatial: number;    // -1 to 1
-  };
-  coherence: number;    // 0 to 1
-  phase_angle: number;  // 0 to 360
-  decision: 'BUY' | 'SELL' | 'HOLD';
-  truth_certificate: {
-    consensus_value: number;
-    consistency_score: number;
-    merkle_root: string;
-    source_count: number;
-  };
-}
-```
-
-### WebSocket API
-
-Connect to `ws://localhost:3000/ws` for real-time eigenstate updates.
-
-**Message Format:**
-```json
-{
-  "type": "eigenstate_update",
-  "asset": "BTC",
-  "data": { /* EigenstateData */ }
-}
-```
-
----
-
-## Avalanche x402 Integration
-
-### Current Implementation
-- Real-time price feeds from CoinGecko + Binance
-- 5-layer cryptographic truth verification
-- Merkle root generation for data integrity
-
-### Planned Avalanche Features
-1. **Pyth Network Integration**: On-chain price feeds from Avalanche C-Chain
-2. **Truth Certificate Smart Contract**: Store Merkle roots on-chain for immutable verification
-3. **Payment Verification**: Integrate x402 payment flows for premium oracle access
-4. **DeFi Integration**: Connect eigenstate decisions to Avalanche-based trading protocols
-
----
-
-## Accessibility (WCAG 2.2 AA++)
-
-- **Screen Readers**: Full ARIA live region support for verdict announcements
-- **Keyboard Navigation**: Tab through all interactive elements with visible focus indicators
-- **High Contrast Mode**: Toggle for enhanced visual clarity
-- **Reduced Motion**: Respects `prefers-reduced-motion` system preference
-- **Voice Narration**: Auditory descriptions of market conditions
-- **Haptic Feedback**: Disabled by default, user-controlled toggle
-
----
-
-
-## License
-
-**Apache License 2.0**
-
-Copyright © 2026 Reality Protocol LLC
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
----
-
-## Contact
-
-**Reality Protocol LLC**  
-Sheridan, WY & Denver, CO
-
-- **Website**: [realityprotocol.io](https://realityprotocol.io)
-- **Demo** https://2y4c2atom332w.ok.kimi.link
-- **Email**: StoneYardGames@proton.me
-- **Discord**: StoneYard
-- **Twitter/X**: @Goldandrainbows
-- 
-      <style>
-        .libutton {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 7px;
-          text-align: center;
-          outline: none;
-          text-decoration: none !important;
-          color: #ffffff !important;
-          width: 200px;
-          height: 32px;
-          border-radius: 16px;
-          background-color: #0A66C2;
-          font-family: "SF Pro Text", Helvetica, sans-serif;
-        }
-      </style>
-<a class="libutton" href="https://www.linkedin.com/comm/mynetwork/discovery-see-all?usecase=PEOPLE_FOLLOWS&followMember=justin-mccrea-439285a9" target="_blank">Follow on LinkedIn</a>
-
----
-
-
+1. **Clone** the repo:
+   ```bash
+   git clone https://github.com/Luckyspot0gold/HONEST-
+   cd HONEST-

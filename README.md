@@ -1,3 +1,4 @@
+<img width="1020" height="680" alt="image" src="https://github.com/user-attachments/assets/719fa78f-4535-474e-a2f4-7dc5aa870eba" />
 # HONEST ⚖️  
 *Harmonic Objective Non-biased Equitable Sensory Translation*
 
@@ -43,7 +44,32 @@ HONEST turns complex crypto data into **432 Hz harmonic sound**, **tactile hapti
 - Full **WCAG 2.2 AA compliance**
 - `prefers-reduced-motion`, `prefers-color-scheme`, screen reader support
 - Open **accessibility test scripts** in `/tests/accessibility/`
+## 🔐 Trust & Verification
 
+H.O.N.E.S.T. signs every sensory output with **Ed25519** — your own keys, not a third-party service.
+
+**You own the trust layer.**
+
+### How to Verify Any Output
+1. Copy the full JSON response (includes `signature` and `publicKey`).
+2. Use the **"Verify This Output"** button on the live demo.
+3. Or paste into the [online verifier](https://verifier.honestdemo.manus.space) (coming soon).
+
+**Trust Anchor example**: `HONEST-8E5F9A3A`
+
+> Never share your private signing key. All verification is open-source and client-side.
+
+ ## 🔧 Backend & Python Support
+
+HONEST also runs as a **Python backend** for server-side signing, testing, and research use.
+
+- `backend/honest_signer.py` — Ed25519 signing (same keys as TypeScript)
+- FastAPI endpoint ready for integration
+- Perfect for grant pilots, RNIB studies, and Airtable automations
+
+See `backend/README.md` for setup.
+
+Full details: [docs/security-verification.md](docs/security-verification.md)
 ---
 
 ## 🌍 Who Is This For?

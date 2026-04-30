@@ -318,7 +318,7 @@ For legal/IP inquiries:
 
 John Arsino, Front Range Law
 
-johnarino@frontrangelaw.com
+johnarsino@frontrangelaw.com
 
 For technical partnerships:
 
